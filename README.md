@@ -16,7 +16,7 @@ and give ratings based on the music generated.
 
 *will update as we go*
 
-## How to run locally
+## How to Run Locally
 ### Necessary installations
 * Node.js and npm (https://nodejs.org/en/)
 * Python 3.X.X (https://www.python.org/downloads/)
@@ -43,6 +43,12 @@ The frontend is set up!!! :)
 * Visit *http://localhost:5000/api/test* in your browser to make sure you can see the test message.
 
 The backend is set up!!! :)
+
+### Running the App in General
+To shut down the frontend or backend server type *ctrl* + *C* in the command prompt (*command* + *C* in terminal for Mac).
+
+To start the frontend server again run `npm start` in the `fontend/group9` directory.
+To start the backend server again run `python run.py` in the `/backend` directory.
 
 
 ##### Questions/Concerns
