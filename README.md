@@ -36,8 +36,8 @@ The frontend is set up!!! :)
 #### Step 2 - Backend Setup
 * Change into the `\ECS171Group9\backend` directory.
 * Activate the Virtual Environment - you should see (venv) appear before your pwd in your terminal/command prompt.
-** For Mac: Run `source env/bin/activate`
-** For PC: Run `env\Scripts\activate`
+- For Mac: Run `source env/bin/activate`
+- For PC: Run `env\Scripts\activate`
 * Run `pip install -r requirements.txt` to install dependencies.
 * Run `python run.py` to start the server.
 * Visit *http://localhost:5000/api/test* in your browser to make sure you can see the test message.
