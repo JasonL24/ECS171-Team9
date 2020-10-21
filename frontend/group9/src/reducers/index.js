@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
+import libraryReducer from './libraryReducer';
 
 
 export default combineReducers({
-  placeholder: () => 'hi'
+  library: libraryReducer
 });
