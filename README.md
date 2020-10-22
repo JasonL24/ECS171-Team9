@@ -36,6 +36,7 @@ The frontend is set up!!! :)
 
 #### Step 2 - Backend Setup
 * Change into the `\ECS171Group9\backend` directory.
+* Create Virtual Environment with `python -m venv env`.
 * Activate the Virtual Environment - you should see (venv) appear before your pwd in your terminal/command prompt.
    * For Mac: Run `source env/bin/activate`
    * For PC: Run `env\Scripts\activate`
