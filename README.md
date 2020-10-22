@@ -12,6 +12,7 @@ and give ratings based on the music generated.
    - Folders such as .idea/ are configuration folders, they are not actual code.
    - Remove all configuration folders before committing and pushing.
 3. Always write good comment, and update README so others can correctly setup the environment
+4. Do not upload any MIDI / Data files to GitHub. All parsed data should go to Google Drive.
 4. It's ok to have a lot of commits
 
 *will update as we go*
