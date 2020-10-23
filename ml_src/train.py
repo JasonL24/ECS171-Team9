@@ -1,3 +1,7 @@
+"""Don't read this unless you REALLY want to understand the architecture.
+This is a very low-level implementation of the RNN. For more modern use,
+go to keras.train"""
+
 import numpy as np
 import tensorflow.compat.v1 as tf
 
