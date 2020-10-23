@@ -46,7 +46,8 @@ model.compile(loss='categorical_crossentropy', optimizer='adam')
 
 
 def train(nn_input, nn_output):
-    model.fit(nn_input, nn_output,
+    model.fit(x=nn_input,
+              y=nn_output,
               epochs=100,
               batch_size=35)
 
