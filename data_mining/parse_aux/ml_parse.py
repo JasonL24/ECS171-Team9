@@ -2,7 +2,7 @@
 import numpy as np
 
 
-def random_select_batch(file: list, x_size: int, y_size: int, batch_size: int = 1) -> np.array:
+def random_select_batch(file, x_size: int, y_size: int, batch_size: int = 1) -> np.array:
     """ randomly select batch_size number of samples of each x_size + y_size
 
     :param file: target song to parse
@@ -11,6 +11,7 @@ def random_select_batch(file: list, x_size: int, y_size: int, batch_size: int = 
     :param batch_size:
     :return: a list of randomly selected batch size input
     """
+
     pass
 
 
@@ -21,6 +22,7 @@ def fill_notes(notes: list, target_size: int):
     :param target_size: target_size to fill
     :return: return list of notes with target size
     """
+    return "hello world"
     pass
 
 
@@ -41,3 +43,13 @@ def build_song(song):
     :return: a MIDI file of the given song
     """
     pass
+
+
+def batch_to_dataframe():
+    """
+    select multiple random batches and merge into a dataframe
+    :return:
+    """
+    pass
+
+
