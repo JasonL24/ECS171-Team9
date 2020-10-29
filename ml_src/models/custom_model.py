@@ -4,18 +4,16 @@ from tensorflow import keras
 # TODO: write this into a configuration file
 n_encoder_cells = 12  # Encoder time steps
 n_decoder_cells = 4  # decoder time steps
-n_inputs = 9  # input pitch and velocity
 n_neurons = 512  # neurons per cell
-n_notes = 9  # number of different notes
-learning_rate = 0.001
+n_notes = 10  # number of different notes
+learning_rate = 0.001  # learning rate
 
 
 def _build_encoder_nn():
-    encoder_inputs = keras.layers.Input(shape=[n_encoder_cells, n_inputs, ], dtype=tf.float32)
+    encoder_inputs = keras.layers.Input(shape=[n_encoder_cells, n_notes, ], dtype=tf.float32)
     encoder_i = keras.layers.GRU(n_neurons,
                                  return_state=True,
-                                 return_sequences=True,
-                                 input_shape=(n_encoder_cells, n_inputs))
+                                 return_sequences=True)
     encoder_ii = keras.layers.GRU(n_neurons, return_state=True)
 
     encoder_outputs_i, last_encoder_state_i = encoder_i(encoder_inputs)
@@ -26,13 +24,12 @@ def _build_encoder_nn():
 
 
 def _build_decoder_nn(states):
-    decoder_inputs = keras.layers.Input(shape=[n_decoder_cells, n_inputs, ], dtype=tf.float32)
+    decoder_inputs = keras.layers.Input(shape=[n_decoder_cells, n_notes, ], dtype=tf.float32)
 
     # create decoder layers
     decoder_i = keras.layers.GRU(units=n_neurons,
                                  return_state=True,
-                                 return_sequences=True,
-                                 input_shape=(n_decoder_cells, n_inputs))
+                                 return_sequences=True)
     decoder_ii = keras.layers.GRU(units=n_neurons,
                                   return_state=True,
                                   return_sequences=True)
@@ -63,7 +60,7 @@ class MusicNN:
         self.decoder_prop = _build_decoder_nn(self.encoder_prop[1])
         self.inf_enc = self._encoder_model()
         self.inf_dec = self._decoder_test_model()
-        self.train_dec = self._decoder_train_model()
+        self.train_model = self._decoder_train_model()
 
     def _encoder_model(self):
         input_layer, states = self.encoder_prop

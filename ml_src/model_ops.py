@@ -26,22 +26,21 @@ def split_data(x_size, y_size, df):
     return x, y
 
 
-def shift_y():
-    pass
+def shift_y(y):
+    zeros = np.zeros([1, y.shape[1]])
+    y = np.concatenate([zeros, y])
+    return y[:-1, :]
 
 
-def match_dim(x: np.ndarray, y: np.ndarray):
-    shape_x = x.shape
-    shape_y = y.shape
-    diff = shape_x[0] - shape_y[0]
-    zeros = np.zeros([diff, shape_y[1]])
-    temp = np.concatenate([zeros, y])
-    return x, temp
+def organize_data(x, y):
+    y_shift = shift_y(y)
+    x = np.concatenate([x, y_shift])
+    return x, y
 
 
 if __name__ == '__main__':
     frame = get_dataframe()
     frame = encode_df(frame)
     dx, dy = split_data(12, 4, frame)
-    dx, dy = match_dim(dx, dy)
+    dx, dy = organize_data(dx, dy)
     print()
