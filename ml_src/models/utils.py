@@ -5,7 +5,7 @@ from sklearn.preprocessing import OneHotEncoder
 
 def get_dataframe():
     _df = pd.DataFrame([[0, 0]], columns=[0, 1])
-    with open('temp.txt') as file:
+    with open('./temp.txt') as file:
         for i, line in zip(range(28), file):
             line = line.split()
             line.pop(0)

@@ -1,8 +1,5 @@
-import numpy as np
-import pandas as pd
 import tensorflow as tf
-from model_ops import *
-from tensorflow.keras.utils import plot_model
+from models.utils import *
 from models.custom_model import MusicNN
 
 # TODO: features to do
@@ -20,7 +17,7 @@ def train(model, x, y_s, y):
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
     model.fit(x=[x, y_s],
               y=y,
-              epochs=50,
+              epochs=1000,
               batch_size=1)
 
 
