@@ -1,21 +1,6 @@
 """Helper Parsing Functions for ML Team"""
-<<<<<<< Updated upstream:data_mining/parse_aux/ml_parse.py
 import numpy as np
 
-
-def random_select_batch(file: list, x_size: int, y_size: int, batch_size: int = 1) -> np.array:
-    """ randomly select batch_size number of samples of each x_size + y_size
-
-    :param file: target song to parse
-    :param x_size: size of encoder
-    :param y_size: size of decoder
-    :param batch_size:
-    :return: a list of randomly selected batch size input
-    """
-    pass
-
-=======
->>>>>>> Stashed changes:data_mining/parse_aux/utils.py
 
 def fill_notes(notes: list, target_size: int):
     """ Given a list of notes, fill the list to target list length
@@ -43,19 +28,4 @@ def build_song(song):
     :param song:
     :return: a MIDI file of the given song
     """
-<<<<<<< Updated upstream:data_mining/parse_aux/ml_parse.py
     pass
-=======
-    pass
-
-
-def batch_to_dataframe():
-    """
-    select multiple random batches and merge into a dataframe
-    :return:
-    """
-    pass
-
-
-# Testing
->>>>>>> Stashed changes:data_mining/parse_aux/utils.py

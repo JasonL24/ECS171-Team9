@@ -32,7 +32,6 @@ encoder_ii = keras.layers.GRU(n_neurons, return_state=True)
 # embeddings = keras.layers.Embedding(n, m)
 # encoder_embeddings = embeddings(encoder_inputs)
 
-<<<<<<< Updated upstream
 encoder_outputs_i, last_encoder_state_i = encoder_i(encoder_inputs)
 encoder_outputs_ii, last_encoder_state_ii = encoder_ii(encoder_outputs_i)
 
@@ -64,13 +63,4 @@ def train(nn_input, nn_output):
 
 if __name__ == '__main__':
     pass
-    # train()
-=======
-    df = read_song('./temp.txt')
-    df = encode_df(df)
-    mini_batch = random_select_batch(df, 12, 7)
-    df_x, df_y = split_data(mini_batch, 8, 4)
-    y_shift = shift_y(df_y)
 
-    train(models.train_model, df_x, y_shift, df_y)
->>>>>>> Stashed changes
