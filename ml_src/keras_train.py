@@ -24,12 +24,10 @@ def train(model, x, y_s, y):
 if __name__ == '__main__':
     models = MusicNN()
 
-    df = get_dataframe()
+    df = read_song('./temp.txt')
     df = encode_df(df)
-    df_x, df_y = split_data(12, 4, df)
+    batch = random_select_batch(df, 12, 10)
+    df_x, df_y = split_data(batch, 8, 4)
     y_shift = shift_y(df_y)
 
-    df_x = df_x.reshape(1, 12, 10)
-    y_shift = y_shift.reshape(1, 4, 10)
-    df_y = df_y.reshape(1, 4, 10)
     train(models.train_model, df_x, y_shift, df_y)

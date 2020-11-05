@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow import keras
 
 # TODO: write this into a configuration file
-n_encoder_cells = 12  # Encoder time steps
+n_encoder_cells = 8  # Encoder time steps
 n_decoder_cells = 4  # decoder time steps
 n_neurons = 512  # neurons per cell
 n_notes = 10  # number of different notes
