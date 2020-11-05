@@ -9,6 +9,7 @@ def fill_notes(notes: list, target_size: int):
     :param target_size: target_size to fill
     :return: return list of notes with target size
     """
+    return "hello world"
     pass
 
 

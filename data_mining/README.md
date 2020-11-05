@@ -32,8 +32,6 @@ ECS 171 Group 9 <br />
 Here are a list of conversion of the symbols used in parsed data
 
 ```
-*  start of a note
-&  end of a note
 +  sharp
 -  flat
 0  rest

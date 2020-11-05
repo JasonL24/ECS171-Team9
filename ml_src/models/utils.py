@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import random
-from sklearn.preprocessing import OneHotEncoder, LabelEncoder
+from sklearn.preprocessing import OneHotEncoder
 
 # increase the vocabs if we have new notations
 _vocabs = ['A', 'B', 'C', 'D', 'E', 'F', 'G', '#', '0', 'A+']
@@ -59,6 +59,9 @@ def encode_df(df: pd.DataFrame()) -> pd.DataFrame:
 
 
 def split_data(batch: np.array, x_size: int, y_size: int):
+    y = batch.shape[1]
+    if x_size + y_size > batch.shape[1]:
+        raise ValueError
     x = batch[:, 0: x_size, :]
     y = batch[:, x_size: x_size + y_size, :]
     return x, y
@@ -66,7 +69,6 @@ def split_data(batch: np.array, x_size: int, y_size: int):
 
 def shift_y(y: np.array):
     batch_size = y.shape[0]
-
     zeros = np.zeros([batch_size, 1, _vocabs_length])
     y_shift = np.concatenate([zeros, y], axis=1)
     return y_shift[:, :-1, :]
