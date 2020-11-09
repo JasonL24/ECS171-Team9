@@ -22,14 +22,29 @@ def train(model, x, y_s, y):
 
 
 if __name__ == '__main__':
+
     models = MusicNN()
+    data = get_words()
+    vocab_size=1000
+    encoded=[]
+    y=[]  # ignore just for testing
+    max_len = 25
+    # encode text to ints
+    for d in data:
+        encoded.append(tf.keras.preprocessing.text.one_hot(d,vocab_size))
+        y.append(0) # ignore just for testing
 
-    df = get_dataframe()
-    df = encode_df(df)
-    df_x, df_y = split_data(12, 4, df)
-    y_shift = shift_y(df_y)
-
-    df_x = df_x.reshape(1, 12, 10)
-    y_shift = y_shift.reshape(1, 4, 10)
-    df_y = df_y.reshape(1, 4, 10)
-    train(models.train_model, df_x, y_shift, df_y)
+    # pad the int arrays by max_len
+    padded=tf.keras.preprocessing.sequence.pad_sequences(encoded,maxlen=max_len,padding='post',value=0.0)
+    padded = np.array(padded)
+    y = np.array(y)
+    #models._embed_model(padded, y, max_len)
+    models.train_model.summary()
+    #df = encode_df(df)
+    #df_x, df_y = split_data(12, 4, df)
+    #y_shift = shift_y(df_y)
+    #df_x = df_x.reshape(1, 12, 10)
+    #y_shift = y_shift.reshape(1, 4, 10)
+    #df_y = df_y.reshape(1, 4, 10)
+    #models.train_model.summary()
+    #train(models.train_model, df_x, y_shift, df_y)

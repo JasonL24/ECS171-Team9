@@ -7,24 +7,30 @@ n_decoder_cells = 4  # decoder time steps
 n_neurons = 512  # neurons per cell
 n_notes = 10  # number of different notes
 learning_rate = 0.001  # learning rate
+vocab_size = 1000
+max_len = 25
+embed_dim = 5
 
+#def _build_embedding_nn():
+#    embedding_layer = 
 
 def _build_encoder_nn():
-    encoder_inputs = keras.layers.Input(shape=[n_encoder_cells, n_notes, ], dtype=tf.float32)
+    _inputs = keras.layers.Input(shape=[max_len, ], dtype=tf.float32)
+    embed = tf.keras.layers.Embedding(vocab_size, embed_dim, input_length=max_len)(_inputs),
     encoder_i = keras.layers.GRU(n_neurons,
                                  return_state=True,
                                  return_sequences=True)
     encoder_ii = keras.layers.GRU(n_neurons, return_state=True)
 
-    encoder_outputs_i, last_encoder_state_i = encoder_i(encoder_inputs)
+    encoder_outputs_i, last_encoder_state_i = encoder_i(embed)
     _, last_encoder_state_ii = encoder_ii(encoder_outputs_i)
     states = [last_encoder_state_i, last_encoder_state_ii]
 
-    return [encoder_inputs, states]
+    return [_inputs, states]
 
 
 def _build_decoder_nn(states):
-    decoder_inputs = keras.layers.Input(shape=[n_decoder_cells, n_notes, ], dtype=tf.float32)
+    decoder_inputs = keras.layers.Input(shape=[n_decoder_cells, embed_dim, ], dtype=tf.float32)
 
     # create decoder layers
     decoder_i = keras.layers.GRU(units=n_neurons,
@@ -74,3 +80,20 @@ class MusicNN:
         e_inputs, _ = self.encoder_prop
         d_inputs, train_outputs, _, _ = self.decoder_prop
         return keras.Model(inputs=[e_inputs, d_inputs], outputs=train_outputs)
+    
+    def _embed_model(self, data, y, max_len):
+    # this is pretty bad and messy
+    # just an embedded layer not connected to anything else right now 
+    # TODO work on connecting embedded layer to nest of RNN
+    # GOD IT'S SO BAD
+        model = tf.keras.Sequential([
+            tf.keras.layers.Embedding(vocab_size, embed_dim, input_length=max_len),
+            tf.keras.layers.Flatten(),
+        ])
+
+        model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['acc'])
+        model.fit(data, y, epochs=15)
+
+        return model
+
+

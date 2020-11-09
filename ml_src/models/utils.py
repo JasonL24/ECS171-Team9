@@ -1,18 +1,15 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
+from gensim.models import Word2Vec
 
 
-def get_dataframe():
-    _df = pd.DataFrame([[0, 0]], columns=[0, 1])
+def get_words():
     with open('./temp.txt') as file:
-        for i, line in zip(range(28), file):
-            line = line.split()
-            line.pop(0)
-            series = pd.Series(line, index=[0, 1])
-            _df.loc[i] = series
-    return _df
-
+        lines = []
+        for line in file:
+            lines.append(line)
+    return lines
 
 def encode_df(df):
     one_hot = OneHotEncoder()
@@ -39,7 +36,6 @@ def organize_data(x, y):
 
 
 if __name__ == '__main__':
-    frame = get_dataframe()
     frame = encode_df(frame)
     dx, dy = split_data(12, 4, frame)
     dx, dy = organize_data(dx, dy)
