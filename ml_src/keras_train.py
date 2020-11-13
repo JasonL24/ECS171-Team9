@@ -1,9 +1,11 @@
-import tensorflow as tf
+import os
 from models.utils import *
-from models.custom_model import MusicNN
+from models.custom_model import *
+
+dataset_dir = '../data_mining/parsed_data/'
+big_epoch = 5
 
 # TODO: features to do
-# Embedding
 # Music Theory
 # Reinforcement Learning
 
@@ -14,20 +16,24 @@ else:
 
 
 def train(model, x, y_s, y):
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
     model.fit(x=[x, y_s],
               y=y,
-              epochs=1000,
-              batch_size=1)
+              epochs=50,
+              batch_size=5)
 
 
 if __name__ == '__main__':
     models = MusicNN()
+    for _ in range(big_epoch):
+        for filename in os.listdir(dataset_dir):
+            song_df = read_song(dataset_dir + filename, 'Piano left')
+            song_df = encode_df(song_df)
+            mini_batch = random_select_batch(song_df, n_length, 500)
+            dx, dy = split_data(mini_batch, n_encoder_cells, n_decoder_cells)
+            s_dy = shift_y(dy)
 
-    df = read_song('./temp.txt')
-    df = encode_df(df)
-    batch = random_select_batch(df, 12, 10)
-    df_x, df_y = split_data(batch, 8, 4)
-    y_shift = shift_y(df_y)
-
-    train(models.train_model, df_x, y_shift, df_y)
+            try:
+                train(models.train_model, dx, dy, s_dy)
+            except KeyboardInterrupt:
+                models.save_models()
+    models.save_models()

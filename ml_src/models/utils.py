@@ -4,7 +4,7 @@ import random
 from sklearn.preprocessing import OneHotEncoder
 
 # increase the vocabs if we have new notations
-_vocabs = ['A', 'B', 'C', 'D', 'E', 'F', 'G', '#', '0', 'A+']
+_vocabs = list(range(44, 85)) + [0]
 _vocabs_length = len(_vocabs)
 _vocabs_array = np.array(_vocabs).reshape((-1, 2))
 _one_hot_enc = OneHotEncoder(handle_unknown='ignore')
@@ -37,19 +37,31 @@ def random_select_batch(df: pd.DataFrame, target_length: int, batch_size: int = 
     return batch
 
 
-def read_song(file: str) -> pd.DataFrame:
+def read_song(file: str, part: str) -> pd.DataFrame:
     """ Parse the given txt file to pandas dataframe
 
     :param file: file path
+    :param part: the targeted part of the song
     :return: a pandas dataframe of the song
     """
     df = pd.DataFrame([[0, 0]], columns=[0, 1])
     with open(file) as file:
-        for i, line in zip(range(28), file):
-            line = line.split()
-            line.pop(0)
-            series = pd.Series(line, index=[0, 1])
-            df.loc[i] = series
+        read = False
+        for i, line in enumerate(file):
+            if line[0] == "\"":
+                continue  # song name
+            if line[0] == "#":
+                line = line.split()
+                if line[1:] == part.split():  # check if it's target part
+                    read = not read
+                    continue
+                if read:  # end reading
+                    break
+            if read:
+                line = line.split()
+                line = [int(x) for x in line[1:]]
+                series = pd.Series(line, index=[0, 1])
+                df.loc[i] = series
     return df
 
 
@@ -59,7 +71,6 @@ def encode_df(df: pd.DataFrame()) -> pd.DataFrame:
 
 
 def split_data(batch: np.array, x_size: int, y_size: int):
-    y = batch.shape[1]
     if x_size + y_size > batch.shape[1]:
         raise ValueError
     x = batch[:, 0: x_size, :]
@@ -82,9 +93,9 @@ def organize_data(x, y):
 
 if __name__ == '__main__':
     # Testing
-    song_df = read_song('./temp.txt')
+    song_df = read_song('../data_mining/parsed_data/bach_846.txt', 'Piano right')
     song_df = encode_df(song_df)
-    mini_batch = random_select_batch(song_df, 6, 7)
-    dx, dy = split_data(mini_batch, 4, 2)
+    mini_batch = random_select_batch(song_df, 64, 500)
+    dx, dy = split_data(mini_batch, 48, 16)
     s_dy = shift_y(dy)
     print()

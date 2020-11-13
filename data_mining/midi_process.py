@@ -45,7 +45,7 @@ for filename in os.listdir(midi_dir):
 
             string = ''
             for line in data:
-                string += ' '.join(['%.5f' % num for num in line])
+                string += '%f %d %d' % (line[0], line[1], line[2])
                 string += '\n'
 
             f.write(string)
