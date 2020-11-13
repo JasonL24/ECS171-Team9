@@ -10,6 +10,12 @@ delta = 0.07
 
 for filename in os.listdir(midi_dir):
     _filename = os.path.splitext(filename)[0]
+    print(_filename)
+
+    # Code to help quicken the parsing process
+    # if (_filename[0] == '2' or _filename[0] == 'A' or _filename[0] == 'a'):
+    #    continue
+    
     midi_data = pretty_midi.PrettyMIDI(midi_dir + filename)
 
     # Print an empirical estimate of its global tempo
@@ -23,7 +29,7 @@ for filename in os.listdir(midi_dir):
     # print(midi_data.instruments)
 
     with open(parsed_dir + _filename + '.txt', "w") as f:
-        print(_filename)
+        #print(_filename)
         f.write("\"" + _filename + "\"" + '\n\n')
 
         for instrument in midi_data.instruments:
