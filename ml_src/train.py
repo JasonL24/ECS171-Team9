@@ -55,7 +55,7 @@ batch_size = 20
 with tf.Session() as sess:
     init.run()
     try:
-        saver.restore(sess, './trianed_models/music_synth_model')
+        saver.restore(sess, './trained_models/music_synth_model')
     except FileNotFoundError:
         print('No previous model found')
 
