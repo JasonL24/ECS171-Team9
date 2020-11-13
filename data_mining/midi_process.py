@@ -33,11 +33,19 @@ for filename in os.listdir(midi_dir):
             song_length = instrument.notes[-1].end
             intervals = int(song_length / delta)
             time_stamp = np.linspace(0, intervals * delta, intervals + 1)
+            data = np.zeros([intervals + 1, 3])
+            data[:, 0] = time_stamp
 
             for note in instrument.notes:
                 taken_spaces = int(note.duration / delta)  # calculate the space required for the duration
                 ptr = ceil(note.start / delta)
-                for i in range(taken_spaces):
-                    string = '%f %d %d\n' % (time_stamp[ptr + i], note.pitch, note.velocity)
-                    f.write(string)
+                note = [note.pitch, note.velocity]
+                if taken_spaces:
+                    data[ptr: ptr + taken_spaces, 1:] = np.array([note, ] * taken_spaces)
 
+            string = ''
+            for line in data:
+                string += ' '.join(['%.5f' % num for num in line])
+                string += '\n'
+
+            f.write(string)
