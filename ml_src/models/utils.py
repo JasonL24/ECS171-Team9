@@ -93,7 +93,7 @@ def organize_data(x, y):
 
 if __name__ == '__main__':
     # Testing
-    song_df = read_song('../data_mining/parsed_data/bach_846.txt', 'Piano right')
+    song_df = read_song('../../data_mining/modern/bach_846.txt', 'Piano right')
     song_df = encode_df(song_df)
     mini_batch = random_select_batch(song_df, 64, 500)
     dx, dy = split_data(mini_batch, 48, 16)

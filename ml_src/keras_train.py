@@ -2,7 +2,7 @@ import os
 from models.utils import *
 from models.custom_model import *
 
-dataset_dir = '../data_mining/parsed_data/'
+dataset_dir = '../data_mining/modern/'
 big_epoch = 5
 
 # TODO: features to do
