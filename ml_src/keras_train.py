@@ -3,7 +3,7 @@ from models.utils import *
 from models.music_nn import *
 from datetime import datetime
 
-big_epoch = 10
+BIG_EPOCH = 10
 dataset_dir = '../data_mining/database/classical/'
 
 
@@ -36,13 +36,13 @@ def main(args):
         else:
             raise ValueError
 
-    for _ in range(big_epoch):
-        train(models, data)
+    for i in range(BIG_EPOCH):
+        train(models, data, i)
 
     return 0
 
 
-def train(models, data):
+def train(models, data, big_epoch):
     model = models.train_model
     x = data[0]
     y_s = data[1]
@@ -56,8 +56,9 @@ def train(models, data):
     now = datetime.now()
     current_time = now.strftime("%H:%M:%S")
     models.save_models()
-    with open('./training_log.txt', 'w+') as f:
-        f.write('model saved at' + current_time)
+    with open('./training.log', 'a') as f:
+        f.write('Big Epoch: ' + str(big_epoch) +
+                '\nModel saved at ' + current_time + '\n\n')
 
 
 if __name__ == '__main__':
