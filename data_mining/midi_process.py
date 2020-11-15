@@ -5,7 +5,7 @@ import os
 import pretty_midi
 
 midi_dir = './local_MIDI/'
-parsed_dir = './parsed_data/'
+parsed_dir = 'modern/'
 delta = 0.07
 
 for filename in os.listdir(midi_dir):
@@ -17,16 +17,6 @@ for filename in os.listdir(midi_dir):
     #    continue
     
     midi_data = pretty_midi.PrettyMIDI(midi_dir + filename)
-
-    # Print an empirical estimate of its global tempo
-    # print(midi_data.estimate_tempo())
-
-    # Compute the relative amount of each semitone across the entire song, a proxy for key
-    # total_velocity = sum(sum(midi_data.get_chroma()))
-    # print([sum(semitone) / total_velocity for semitone in midi_data.get_chroma()])
-
-    # Shift all notes up by 5 semitones
-    # print(midi_data.instruments)
 
     with open(parsed_dir + _filename + '.txt', "w") as f:
         #print(_filename)

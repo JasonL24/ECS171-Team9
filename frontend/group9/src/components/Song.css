@@ -1,0 +1,51 @@
+body {
+  background-color: #fff3b6;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.song-area {
+  margin-top: 220px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.single-song {
+  display: flex;
+  flex-direction: column;
+  margin-right: 650px;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+}
+
+.progress-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.play-pause {
+  margin-right: 860px;
+}
+
+.play-btn {
+  margin-right: 10px;
+}
+
+.prog-bar {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.song-title {
+  font-size: 48px;
+}
+
+.song-genres {
+  font-size: 19px;
+}
