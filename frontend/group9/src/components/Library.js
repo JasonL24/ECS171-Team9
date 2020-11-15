@@ -6,6 +6,7 @@ import Helmet from 'react-helmet';
 
 import './Library.css';
 import { fetchLibrary } from '../actions';
+import Navbar from './Navbar';
 
 const Library = () => {
   // Fetch library on mount
@@ -43,6 +44,7 @@ const Library = () => {
   }
   return(
     <div className="page-font">
+      <Navbar />
       <h1 className="library-title">Music Library</h1>
       <Container maxWidth="lg" className="titles-bolder">
         <li className="song-item">
