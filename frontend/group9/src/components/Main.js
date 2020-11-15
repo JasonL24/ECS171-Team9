@@ -3,8 +3,14 @@ import Helmet from 'react-helmet';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import './Main.css';
+import backend from '../api/backend';
 
 const Main = () => {
+  const generateSong = async () => {
+    const res = await backend.get('/api/generate');
+    console.log(res);
+  }
+
   return(
     <div>
       <Helmet>
@@ -19,7 +25,7 @@ const Main = () => {
           <div class="main-center-subtitle">AI that makes music for you</div>
         </div>
         <Link to="/song" >
-          <Button class="main-generate-button" color="primary" size="large">Generate!</Button>
+          <Button class="main-generate-button" color="primary" size="large" onClick={() => generateSong()}>Generate!</Button>
         </Link>
       </div>
     </div>

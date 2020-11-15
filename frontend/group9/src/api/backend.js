@@ -1,5 +1,5 @@
-import firebase from "firebase/app";
+import axios from 'axios';
 
-var database = firebase.database();
-
-database.ref().child(library);
+export default axios.create({
+  baseURL: 'http://localhost:5000'
+}); 
