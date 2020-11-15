@@ -3,12 +3,15 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import Main from './Main';
 import Library from './Library';
+import Song from './Song';
+
 const App = () => {
   return (
     <div>
       <Router>
         <Route path="/" exact component={Main} />
         <Route path="/library" component={Library} />
+        <Route path ="/song" component={Song} />
       </Router>
     </div>
   )

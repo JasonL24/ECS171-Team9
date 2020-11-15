@@ -10,13 +10,15 @@ const Main = () => {
       <Helmet>
         <style>{'body { background-color: #fff3b6 }'}</style>
       </Helmet>
-      <div class="main-title">Library</div>
+      <Link to="/library">    
+        <div class="main-title">Library</div>
+      </Link>
       <div class="main-center-container">
         <div class="main-text-container">
           <div class="main-center-title">MusicSynth</div>
           <div class="main-center-subtitle">AI that makes music for you</div>
         </div>
-        <Link to="/library" >
+        <Link to="/song" >
           <Button class="main-generate-button" color="primary" size="large">Generate!</Button>
         </Link>
       </div>
