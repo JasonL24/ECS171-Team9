@@ -1,14 +1,6 @@
 import tensorflow as tf
 from tensorflow import keras
-
-# TODO: write this into a configuration file
-n_encoder_cells = 100  # Encoder time steps
-n_decoder_cells = 28  # decoder time steps
-n_length = n_encoder_cells + n_decoder_cells
-n_neurons = 48  # neurons per cell
-n_notes = 42  # number of different notes
-learning_rate = 0.001  # learning rate
-
+from models.define import *
 
 def _build_encoder_nn():
     encoder_inputs = keras.layers.Input(shape=[n_encoder_cells, n_notes, ], dtype=tf.float32)
@@ -44,8 +36,12 @@ def _build_decoder_nn(states):
                                    return_sequences=True)
 
     # connecting layers for training model
-    decoder_outputs_i, _ = decoder_i(decoder_inputs, initial_state=states[0])
-    decoder_outputs_ii, _ = decoder_ii(decoder_outputs_i, initial_state=states[1])
+    # decoder_outputs_i, _ = decoder_i(decoder_inputs, initial_state=states[0])
+    # decoder_outputs_ii, _ = decoder_ii(decoder_outputs_i, initial_state=states[1])
+    # decoder_outputs_iii, _ = decoder_ii(decoder_outputs_ii, initial_state=states[2])
+    # decoder_train_output = keras.layers.Dense(n_notes, activation='softmax')(decoder_outputs_iii)
+    decoder_outputs_i, _ = decoder_i(decoder_inputs)
+    decoder_outputs_ii, _ = decoder_ii(decoder_outputs_i)
     decoder_outputs_iii, _ = decoder_ii(decoder_outputs_ii, initial_state=states[2])
     decoder_train_output = keras.layers.Dense(n_notes, activation='softmax')(decoder_outputs_iii)
 
@@ -73,6 +69,7 @@ class MusicNN:
         self.inf_enc = self._encoder_model()
         self.inf_dec = self._decoder_test_model()
         self.train_model = self._decoder_train_model()
+        self.path = './trained_models'
 
     def _encoder_model(self):
         input_layer, states = self.encoder_prop
@@ -90,12 +87,15 @@ class MusicNN:
         model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
         return model
 
-    def load_models(self, path: str):
-        self.inf_enc = keras.models.load_model(path + '/inf_enc')
-        self.inf_dec = keras.models.load_model(path + '/inf_dec')
-        self.train_model = keras.models.load_model(path + '/train_model')
+    def load_models(self):
+        self.inf_enc = keras.models.load_model(self.path + '/inf_enc')
+        self.inf_dec = keras.models.load_model(self.path + '/inf_dec')
+        self.train_model = keras.models.load_model(self.path + '/train_model')
 
-    def save_models(self, path='./trained_models'):
-        self.inf_enc.save(path + '/inf_enc')
-        self.inf_dec.save(path + '/inf_dec')
-        self.train_model.save(path + '/train_model')
+    def save_models(self):
+        self.inf_enc.save(self.path + '/inf_enc')
+        self.inf_dec.save(self.path + '/inf_dec')
+        self.train_model.save(self.path + '/train_model')
+
+    def set_path(self, path):
+        self.path = path
