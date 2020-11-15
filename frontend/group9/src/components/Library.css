@@ -3,3 +3,40 @@
   flex-direction: row;
   justify-content: space-evenly;
 }
+
+.song-list-container {
+  max-height: 400px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  text-align: center;
+  padding-left: 0px;
+  margin: 0px;
+  padding-left: calc(100vw - 100%);
+}
+
+.page-font {
+  font-family: 'Open Sans', sans-serif;
+}
+
+.library-title {
+  margin-top: 20px;
+  margin-left: 30px;
+}
+
+.flex-item-size {
+  flex: 1 1;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.button-title {
+  min-width: 189.71px;
+  text-align: center;
+}
+
+.titles-bolder {
+  font-weight: 800;
+}
