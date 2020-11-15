@@ -1,14 +1,22 @@
+import random
+import os
 import pandas as pd
 import numpy as np
-import random
+from models.define import *
 from sklearn.preprocessing import OneHotEncoder
 
-# increase the vocabs if we have new notations
-_vocabs = list(range(44, 85)) + [0]
-_vocabs_length = len(_vocabs)
-_vocabs_array = np.array(_vocabs).reshape((-1, 2))
-_one_hot_enc = OneHotEncoder(handle_unknown='ignore')
-_one_hot_enc.fit(_vocabs_array)
+_pitch_vocabs = list(range(60, 85)) + [0]
+_pitch_vocabs_length = len(_pitch_vocabs)
+
+_vel_vocabs = list(range(40, 75)) + [0]
+_vel_vocabs_length = len(_vel_vocabs)
+_combined_length = _pitch_vocabs_length + _vel_vocabs_length
+
+_pitch_enc = OneHotEncoder(handle_unknown='ignore')
+_pitch_enc.fit(np.array(_pitch_vocabs).reshape([-1, 1]))
+
+_vel_enc = OneHotEncoder(handle_unknown='ignore')
+_vel_enc.fit(np.array(_vel_vocabs).reshape([-1, 1]))
 
 
 def random_select_batch(df: pd.DataFrame, target_length: int, batch_size: int = 1) -> np.array:
@@ -30,7 +38,7 @@ def random_select_batch(df: pd.DataFrame, target_length: int, batch_size: int = 
     # random sample
     samples = random.sample(range(song_length - target_length), batch_size)
 
-    batch = np.zeros((batch_size, target_length, _vocabs_length))
+    batch = np.zeros((batch_size, target_length, _combined_length))
     for i, j in zip(samples, range(batch_size)):
         line = df.loc[i: i + target_length - 1, :].to_numpy()
         batch[j, :, :] = line
@@ -66,8 +74,10 @@ def read_song(file: str, part: str) -> pd.DataFrame:
 
 
 def encode_df(df: pd.DataFrame()) -> pd.DataFrame:
-    encoded = _one_hot_enc.transform(df.to_numpy()).toarray()
-    return pd.DataFrame(encoded)
+    pitch_enc = _pitch_enc.transform(df[0].to_numpy().reshape((-1, 1))).toarray()
+    vel_enc = _vel_enc.transform(df[1].to_numpy().reshape(-1, 1)).toarray()
+    combined = np.concatenate([pitch_enc, vel_enc], axis=1)
+    return pd.DataFrame(combined)
 
 
 def split_data(batch: np.array, x_size: int, y_size: int):
@@ -80,7 +90,7 @@ def split_data(batch: np.array, x_size: int, y_size: int):
 
 def shift_y(y: np.array):
     batch_size = y.shape[0]
-    zeros = np.zeros([batch_size, 1, _vocabs_length])
+    zeros = np.zeros([batch_size, 1, _combined_length])
     y_shift = np.concatenate([zeros, y], axis=1)
     return y_shift[:, :-1, :]
 
@@ -91,11 +101,30 @@ def organize_data(x, y):
     return x, y
 
 
-if __name__ == '__main__':
-    # Testing
-    song_df = read_song('../../data_mining/modern/bach_846.txt', 'Piano right')
-    song_df = encode_df(song_df)
-    mini_batch = random_select_batch(song_df, 64, 500)
-    dx, dy = split_data(mini_batch, 48, 16)
+def batch_randomize(batches: list) -> np.array:
+    batches = np.concatenate(batches, axis=0)
+    np.random.shuffle(batches)
+    return batches
+
+
+def generate_data(dataset_dir, part, n):
+    batches = list()
+    for filename in os.listdir(dataset_dir):
+        print(filename)
+        song_df = read_song(dataset_dir + filename, part)
+        song_df = encode_df(song_df)
+        batches.append(random_select_batch(song_df, n_length, 500))
+
+    batches = batch_randomize(batches)
+    dx, dy = split_data(batches, n_encoder_cells, n_decoder_cells)
     s_dy = shift_y(dy)
-    print()
+    np.save('./dataset/encoder_data_' + n + '.npy', dx)
+    np.save('./dataset/decoder_data_' + n + '.npy', dy)
+    np.save('./dataset/shifted_decoder_data_' + n + '.npy', s_dy)
+
+
+def load_train_data(n):
+    dx = np.load('./dataset/encoder_data_' + n + '.npy')
+    dy = np.load('./dataset/decoder_data_' + n + '.npy')
+    s_dy = np.load('./dataset/shifted_decoder_data_' + n + '.npy')
+    return dx, s_dy, dy
