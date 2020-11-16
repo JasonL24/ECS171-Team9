@@ -2,6 +2,7 @@ import tensorflow as tf
 from tensorflow import keras
 from models.define import *
 
+
 def _build_encoder_nn():
     encoder_inputs = keras.layers.Input(shape=[n_encoder_cells, n_notes, ], dtype=tf.float32)
     encoder_i = keras.layers.GRU(n_neurons,
@@ -54,16 +55,15 @@ def _build_decoder_nn(states):
     decoder_outputs_i, decoder_state_i = decoder_i(decoder_inputs, initial_state=decoder_h_input_i)
     decoder_outputs_ii, decoder_state_ii = decoder_ii(decoder_outputs_i, initial_state=decoder_h_input_ii)
     decoder_outputs_iii, decoder_state_iii = decoder_iii(decoder_outputs_ii, initial_state=decoder_h_input_iii)
-    decoder_test_output = keras.layers.Dense(n_notes, activation='softmax')(decoder_outputs_iii)
+    decoder_test_output = keras.layers.Dense(n_notes, activation='softmax', input_shape=(n_neurons, 6732))(
+        decoder_outputs_iii)
 
     return [decoder_inputs, decoder_train_output, decoder_states_input, decoder_test_output]
 
 
 class MusicNN:
-    # TODO: Add embedding layer later
-    # embeddings = keras.layers.Embedding(n, m)
-    # encoder_embeddings = embeddings(encoder_inputs)
     def __init__(self):
+
         self.encoder_prop = _build_encoder_nn()
         self.decoder_prop = _build_decoder_nn(self.encoder_prop[1])
         self.inf_enc = self._encoder_model()
@@ -87,15 +87,15 @@ class MusicNN:
         model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
         return model
 
-    def load_models(self):
-        self.inf_enc = keras.models.load_model(self.path + '/inf_enc')
-        self.inf_dec = keras.models.load_model(self.path + '/inf_dec')
-        self.train_model = keras.models.load_model(self.path + '/train_model')
+    def load_models(self, path):
+        self.inf_enc = keras.models.load_model(path + '/inf_enc.h5')
+        self.inf_dec = keras.models.load_model(path + '/inf_dec.h5')
+        self.train_model = keras.models.load_model(path + '/train_model.h5')
 
     def save_models(self):
-        self.inf_enc.save(self.path + '/inf_enc')
-        self.inf_dec.save(self.path + '/inf_dec')
-        self.train_model.save(self.path + '/train_model')
+        self.inf_enc.save(self.path + '/inf_enc.h5')
+        self.inf_dec.save(self.path + '/inf_dec.h5')
+        self.train_model.save(self.path + '/train_model.h5')
 
     def set_path(self, path):
         self.path = path

@@ -15,11 +15,11 @@ for filename in os.listdir(midi_dir):
     # Code to help quicken the parsing process
     # if (_filename[0] == '2' or _filename[0] == 'A' or _filename[0] == 'a'):
     #    continue
-    
+
     midi_data = pretty_midi.PrettyMIDI(midi_dir + filename)
 
     with open(parsed_dir + _filename + '.txt', "w") as f:
-        #print(_filename)
+        # print(_filename)
         f.write("\"" + _filename + "\"" + '\n\n')
 
         for instrument in midi_data.instruments:
