@@ -6,6 +6,7 @@ import PauseIcon from '@material-ui/icons/Pause';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 import './Song.css';
+import Navbar from './Navbar';
 
 const MIDIjs = window.MIDIjs;
 
@@ -71,9 +72,7 @@ const Song = () => {
   return (
     <div>
       {doTimer()}
-      <Link to="/">
-        <Button variant="contained">Home</Button>
-      </Link>
+      <Navbar />
       <div className="song-area">
         <div className="title-row">
           {renderSong()}

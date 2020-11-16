@@ -1,9 +1,9 @@
 import React from 'react';
-import Helmet from 'react-helmet';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import './Main.css';
 import backend from '../api/backend';
+import Navbar from './Navbar';
 
 const Main = () => {
   const generateSong = async () => {
@@ -13,12 +13,7 @@ const Main = () => {
 
   return(
     <div>
-      <Helmet>
-        <style>{'body { background-color: #fff3b6 }'}</style>
-      </Helmet>
-      <Link to="/library">    
-        <div class="main-title">Library</div>
-      </Link>
+      <Navbar />
       <div class="main-center-container">
         <div class="main-text-container">
           <div class="main-center-title">MusicSynth</div>

@@ -10,7 +10,6 @@ from models.utils import *
 from models.music_nn import *
 from datetime import datetime
 
-BIG_EPOCH = 10
 dataset_dir = '../data_mining/database/classical/'
 
 
@@ -18,17 +17,18 @@ def main(args):
     models = MusicNN()
     data = list()
     epoch = 30
+    big_epoch = 10
     for arg in args[1:]:
         arg = arg.split('=')
         if arg[0] == 'model':
             if arg[1][0:4] == 'load':
                 print('Loading Model')
-                _, path = arg[1].split('|')
+                _, path = arg[1].split('@')
                 models.load_models(path)
         elif arg[0] == 'save_model_to':
             models.set_path(arg[1])
         elif arg[0] == 'data':
-            ops, n = arg[1].split('|')
+            ops, n = arg[1].split('@')
             if ops == 'generate':
                 generate_data(dataset_dir, 'Piano right', n)
                 data = load_train_data(n)
@@ -36,10 +36,12 @@ def main(args):
                 data = load_train_data(n)
         elif arg[0] == 'epoch':
             epoch = int(arg[1])
+        elif arg[0] == 'big_epoch':
+            big_epoch = int(arg[1])
         else:
             raise ValueError
 
-    for i in range(BIG_EPOCH):
+    for i in range(big_epoch):
         train(models, data, i, epoch)
 
     return 0
