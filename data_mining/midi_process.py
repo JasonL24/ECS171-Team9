@@ -19,14 +19,11 @@ for filename in os.listdir(midi_dir):
     midi_data = pretty_midi.PrettyMIDI(midi_dir + filename)
 
     with open(parsed_dir + _filename + '.txt', "w") as f:
-        # print(_filename)
         f.write("\"" + _filename + "\"" + '\n\n')
-        # print(_filename)
-
-        count = 0;
+        count = 0
         for instrument in midi_data.instruments:
-            if (instrument.name == "Piano left" or instrument.name == "Piano right"):
-                if (count == 0):
+            if instrument.name == "Piano left" or instrument.name == "Piano right":
+                if count == 0:
                     f.write("\"" + _filename + "\"" + '\n\n')
                     count = 1
 
@@ -60,7 +57,7 @@ for filename in os.listdir(parsed_dir):
 
     with open(parsed_dir + _filename + '.txt', "r") as f:
         info = f.read()
-        if (info == ""):
+        if info == "":
             print("removing empty")
             f.close()
             os.remove(parsed_dir + _filename + '.txt');

@@ -4,6 +4,7 @@ model = new_model or load_model
 save_model_to = path
 data = generate or load | and the dataset number to replace or load
 epoch = small epoch
+big_epoch = how many times the model fits
 """
 import sys
 from models.utils import *
