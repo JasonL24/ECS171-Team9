@@ -31,8 +31,10 @@ def random_select_batch(df: pd.DataFrame, target_length: int, batch_size: int = 
     song_length = len(df)
 
     if batch_size > song_length - target_length + 1:  # So we don't select overlapping samples
+        print('Batch size too big', str(song_length))
         raise ValueError
     if target_length > song_length:  # Target size is bigger than the length of the song
+        print('Target length is longer than song', str(song_length))
         raise ValueError
 
     # random sample
@@ -113,7 +115,10 @@ def generate_data(dataset_dir, part, n):
         print(filename)
         song_df = read_song(dataset_dir + filename, part)
         song_df = encode_df(song_df)
-        batches.append(random_select_batch(song_df, n_length, 500))
+        try:
+            batches.append(random_select_batch(song_df, n_length, 100))
+        except ValueError:
+            continue
 
     batches = batch_randomize(batches)
     dx, dy = split_data(batches, n_encoder_cells, n_decoder_cells)
@@ -128,3 +133,32 @@ def load_train_data(n):
     dy = np.load('./dataset/decoder_data_' + n + '.npy')
     s_dy = np.load('./dataset/shifted_decoder_data_' + n + '.npy')
     return dx, s_dy, dy
+
+
+def generate_sequences():
+    rand_pitch = list()
+    rand_vel = list()
+    for i in range(n_length):
+        rand_pitch.append(random.choice(_pitch_vocabs))
+        rand_vel.append(random.choice(_vel_vocabs))
+
+    enc_seq = np.array([rand_pitch[0:n_encoder_cells], rand_vel[0:n_encoder_cells]])
+    dec_seq = np.array([rand_pitch[n_encoder_cells:], rand_vel[n_encoder_cells:]])
+    enc_seq = encode_df(pd.DataFrame(data=enc_seq.reshape((-1, 2)), columns=[0, 1])).to_numpy()
+    dec_seq = encode_df(pd.DataFrame(data=dec_seq.reshape((-1, 2)), columns=[0, 1])).to_numpy()
+    enc_seq = enc_seq.reshape([1, n_encoder_cells, n_notes])
+    dec_seq = dec_seq.reshape([1, n_decoder_cells, n_notes])
+    return enc_seq, dec_seq
+
+
+def song_threshold(song: np.array):
+    pitch = song[:, 0:_pitch_vocabs_length]
+    velocity = song[:, _pitch_vocabs_length:]
+    pitch = np.argmax(pitch, axis=1)
+    velocity = np.argmax(velocity, axis=1)
+    return pitch, velocity
+
+#
+# if __name__ == '__main__':
+#     x, y = generate_sequences()
+#     print()

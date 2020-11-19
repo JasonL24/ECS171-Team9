@@ -37,14 +37,14 @@ def _build_decoder_nn(states):
                                    return_sequences=True)
 
     # connecting layers for training model
-    # decoder_outputs_i, _ = decoder_i(decoder_inputs, initial_state=states[0])
-    # decoder_outputs_ii, _ = decoder_ii(decoder_outputs_i, initial_state=states[1])
-    # decoder_outputs_iii, _ = decoder_ii(decoder_outputs_ii, initial_state=states[2])
-    # decoder_train_output = keras.layers.Dense(n_notes, activation='softmax')(decoder_outputs_iii)
-    decoder_outputs_i, _ = decoder_i(decoder_inputs)
-    decoder_outputs_ii, _ = decoder_ii(decoder_outputs_i)
+    decoder_outputs_i, _ = decoder_i(decoder_inputs, initial_state=states[0])
+    decoder_outputs_ii, _ = decoder_ii(decoder_outputs_i, initial_state=states[1])
     decoder_outputs_iii, _ = decoder_ii(decoder_outputs_ii, initial_state=states[2])
     decoder_train_output = keras.layers.Dense(n_notes, activation='softmax')(decoder_outputs_iii)
+    # decoder_outputs_i, _ = decoder_i(decoder_inputs)
+    # decoder_outputs_ii, _ = decoder_ii(decoder_outputs_i)
+    # decoder_outputs_iii, _ = decoder_ii(decoder_outputs_ii, initial_state=states[2])
+    # decoder_train_output = keras.layers.Dense(n_notes, activation='softmax')(decoder_outputs_iii)
 
     # redefining layers for inference model
     decoder_h_input_i = keras.layers.Input(shape=[n_neurons, ])
@@ -55,15 +55,14 @@ def _build_decoder_nn(states):
     decoder_outputs_i, decoder_state_i = decoder_i(decoder_inputs, initial_state=decoder_h_input_i)
     decoder_outputs_ii, decoder_state_ii = decoder_ii(decoder_outputs_i, initial_state=decoder_h_input_ii)
     decoder_outputs_iii, decoder_state_iii = decoder_iii(decoder_outputs_ii, initial_state=decoder_h_input_iii)
-    decoder_test_output = keras.layers.Dense(n_notes, activation='softmax', input_shape=(n_neurons, 6732))(
-        decoder_outputs_iii)
+    decoder_test_output = keras.layers.Dense(n_notes, activation='softmax')(decoder_outputs_iii)
+    decoder_states_output = [decoder_state_i, decoder_state_ii, decoder_state_iii]
 
-    return [decoder_inputs, decoder_train_output, decoder_states_input, decoder_test_output]
+    return [decoder_inputs, decoder_train_output, decoder_states_input, decoder_test_output, decoder_states_output]
 
 
 class MusicNN:
     def __init__(self):
-
         self.encoder_prop = _build_encoder_nn()
         self.decoder_prop = _build_decoder_nn(self.encoder_prop[1])
         self.inf_enc = self._encoder_model()
@@ -77,20 +76,26 @@ class MusicNN:
         return model
 
     def _decoder_test_model(self):
-        d_inputs, _, d_states, test_outputs = self.decoder_prop
-        return keras.Model(inputs=[d_inputs] + d_states, outputs=test_outputs)
+        d_inputs, _, d_states, test_outputs, test_states = self.decoder_prop
+        return keras.Model(inputs=[d_inputs] + d_states, outputs=[test_outputs] + test_states)
 
     def _decoder_train_model(self):
         e_inputs, _ = self.encoder_prop
-        d_inputs, train_outputs, _, _ = self.decoder_prop
+        d_inputs, train_outputs, _, _, _ = self.decoder_prop
         model = keras.Model(inputs=[e_inputs, d_inputs], outputs=train_outputs)
         model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
         return model
 
-    def load_models(self, path):
-        self.inf_enc = keras.models.load_model(path + '/inf_enc.h5')
-        self.inf_dec = keras.models.load_model(path + '/inf_dec.h5')
-        self.train_model = keras.models.load_model(path + '/train_model.h5')
+    # DEPRECATED LOL
+    # def load_models(self, path):
+    #     self.inf_enc = keras.models.load_model(path + '/inf_enc.h5')
+    #     self.inf_dec = keras.models.load_model(path + '/inf_dec.h5')
+    #     self.train_model = keras.models.load_model(path + '/train_model.h5')
+
+    def load_weights(self, path):
+        self.inf_enc.load_weights(path + '/inf_enc.h5')
+        self.inf_dec.load_weights(path + '/inf_dec.h5')
+        self.train_model.load_weights(path + '/train_model.h5')
 
     def save_models(self):
         self.inf_enc.save(self.path + '/inf_enc.h5')
@@ -99,3 +104,16 @@ class MusicNN:
 
     def set_path(self, path):
         self.path = path
+
+    def generate_songs(self, enc_src, dec_src, length):
+        states = self.inf_enc.predict(enc_src)
+
+        target_seq = dec_src
+        song = list()
+        for t in range(length):
+            y_pred, state_1, state_2, state_3 = self.inf_dec.predict(x=[target_seq] + states)
+            song.append(y_pred[0, 0, :])
+            states = [state_1, state_2, state_3]
+            target_seq = y_pred
+            # print(t)
+        return song

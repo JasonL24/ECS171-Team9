@@ -60,5 +60,5 @@ for filename in os.listdir(parsed_dir):
         if info == "":
             print("removing empty")
             f.close()
-            os.remove(parsed_dir + _filename + '.txt');
+            os.remove(parsed_dir + _filename + '.txt')
         f.close()

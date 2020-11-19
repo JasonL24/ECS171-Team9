@@ -25,7 +25,7 @@ def main(args):
             if arg[1][0:4] == 'load':
                 print('Loading Model')
                 _, path = arg[1].split('@')
-                models.load_models(path)
+                models.load_weights(path)
         elif arg[0] == 'save_model_to':
             models.set_path(arg[1])
         elif arg[0] == 'data':
