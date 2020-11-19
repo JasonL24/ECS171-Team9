@@ -41,10 +41,6 @@ def _build_decoder_nn(states):
     decoder_outputs_ii, _ = decoder_ii(decoder_outputs_i, initial_state=states[1])
     decoder_outputs_iii, _ = decoder_ii(decoder_outputs_ii, initial_state=states[2])
     decoder_train_output = keras.layers.Dense(n_notes, activation='softmax')(decoder_outputs_iii)
-    # decoder_outputs_i, _ = decoder_i(decoder_inputs)
-    # decoder_outputs_ii, _ = decoder_ii(decoder_outputs_i)
-    # decoder_outputs_iii, _ = decoder_ii(decoder_outputs_ii, initial_state=states[2])
-    # decoder_train_output = keras.layers.Dense(n_notes, activation='softmax')(decoder_outputs_iii)
 
     # redefining layers for inference model
     decoder_h_input_i = keras.layers.Input(shape=[n_neurons, ])
