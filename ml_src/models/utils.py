@@ -3,20 +3,17 @@ import os
 import pandas as pd
 import numpy as np
 from models.define import *
+from sklearn.cluster import KMeans
+from sklearn.neighbors import LocalOutlierFactor
 from sklearn.preprocessing import OneHotEncoder
 
-_pitch_vocabs = list(range(60, 85)) + [0]
-_pitch_vocabs_length = len(_pitch_vocabs)
 
-_vel_vocabs = list(range(40, 75)) + [0]
-_vel_vocabs_length = len(_vel_vocabs)
-_combined_length = _pitch_vocabs_length + _vel_vocabs_length
+_lof_filter = LocalOutlierFactor(n_neighbors=n_notes)
+_kMeans = KMeans(n_clusters=n_notes, random_state=0)
 
-_pitch_enc = OneHotEncoder(handle_unknown='ignore')
-_pitch_enc.fit(np.array(_pitch_vocabs).reshape([-1, 1]))
-
-_vel_enc = OneHotEncoder(handle_unknown='ignore')
-_vel_enc.fit(np.array(_vel_vocabs).reshape([-1, 1]))
+_k_vocabs = list(range(0, n_notes))
+_kMeans_enc = OneHotEncoder(handle_unknown='ignore')
+_kMeans_enc.fit(np.array(_k_vocabs).reshape([-1, 1]))
 
 
 def random_select_batch(df: pd.DataFrame, target_length: int, batch_size: int = 1) -> np.array:
@@ -40,7 +37,7 @@ def random_select_batch(df: pd.DataFrame, target_length: int, batch_size: int = 
     # random sample
     samples = random.sample(range(song_length - target_length), batch_size)
 
-    batch = np.zeros((batch_size, target_length, _combined_length))
+    batch = np.zeros((batch_size, target_length, 2))
     for i, j in zip(samples, range(batch_size)):
         line = df.loc[i: i + target_length - 1, :].to_numpy()
         batch[j, :, :] = line
@@ -75,11 +72,8 @@ def read_song(file: str, part: str) -> pd.DataFrame:
     return df
 
 
-def encode_df(df: pd.DataFrame()) -> pd.DataFrame:
-    pitch_enc = _pitch_enc.transform(df[0].to_numpy().reshape((-1, 1))).toarray()
-    vel_enc = _vel_enc.transform(df[1].to_numpy().reshape(-1, 1)).toarray()
-    combined = np.concatenate([pitch_enc, vel_enc], axis=1)
-    return pd.DataFrame(combined)
+def encode_df(array: np.array) -> np.array:
+    return np.array(_kMeans_enc.transform(array).toarray())
 
 
 def split_data(batch: np.array, x_size: int, y_size: int):
@@ -92,7 +86,7 @@ def split_data(batch: np.array, x_size: int, y_size: int):
 
 def shift_y(y: np.array):
     batch_size = y.shape[0]
-    zeros = np.zeros([batch_size, 1, _combined_length])
+    zeros = np.zeros([batch_size, 1, n_notes])
     y_shift = np.concatenate([zeros, y], axis=1)
     return y_shift[:, :-1, :]
 
@@ -109,20 +103,44 @@ def batch_randomize(batches: list) -> np.array:
     return batches
 
 
+def clustering_notes(notes_dict: list, batches: np.array) -> np.array:
+    notes_dict = np.concatenate(notes_dict)
+    # batches = np.concatenate(batches)
+
+    outliers = np.array(_lof_filter.fit_predict(notes_dict))
+    outliers_index = np.where(outliers == -1)
+    notes_dict = np.delete(notes_dict, outliers_index[0], axis=0)
+    _kMeans.fit(notes_dict)
+    print('Outliers: ', len(outliers_index[0]))
+
+    tmp_batches = list()
+    for batch in batches:
+        tmp_batch = list()
+        for step in batch:
+            k_batch = _kMeans.predict(step.reshape(1, 2))
+            tmp_batch.append(k_batch)
+        encoded_k = encode_df(np.array(tmp_batch).reshape((-1, 1)))
+        tmp_batches.append(encoded_k)
+    return np.array(tmp_batches)
+
+
 def generate_data(dataset_dir, part, n):
     batches = list()
+    notes_dict = list()
     for filename in os.listdir(dataset_dir):
         print(filename)
         song_df = read_song(dataset_dir + filename, part)
-        song_df = encode_df(song_df)
         try:
+            notes_dict.append(song_df)
             batches.append(random_select_batch(song_df, n_length, 100))
         except ValueError:
             continue
 
     batches = batch_randomize(batches)
+    batches = clustering_notes(notes_dict, batches)
     dx, dy = split_data(batches, n_encoder_cells, n_decoder_cells)
     s_dy = shift_y(dy)
+
     np.save('./dataset/encoder_data_' + n + '.npy', dx)
     np.save('./dataset/decoder_data_' + n + '.npy', dy)
     np.save('./dataset/shifted_decoder_data_' + n + '.npy', s_dy)
@@ -136,29 +154,29 @@ def load_train_data(n):
 
 
 def generate_sequences():
-    rand_pitch = list()
-    rand_vel = list()
+    rand_seq = list()
     for i in range(n_length):
-        rand_pitch.append(random.choice(_pitch_vocabs))
-        rand_vel.append(random.choice(_vel_vocabs))
+        rand_seq.append(random.choice(_k_vocabs))
 
-    enc_seq = np.array([rand_pitch[0:n_encoder_cells], rand_vel[0:n_encoder_cells]])
-    dec_seq = np.array([rand_pitch[n_encoder_cells:], rand_vel[n_encoder_cells:]])
-    enc_seq = encode_df(pd.DataFrame(data=enc_seq.reshape((-1, 2)), columns=[0, 1])).to_numpy()
-    dec_seq = encode_df(pd.DataFrame(data=dec_seq.reshape((-1, 2)), columns=[0, 1])).to_numpy()
+    enc_seq = np.array(rand_seq[0:n_encoder_cells]).reshape((-1, 1))
+    dec_seq = np.array(rand_seq[n_encoder_cells:]).reshape((-1, 1))
+    enc_seq = encode_df(enc_seq)
+    dec_seq = encode_df(dec_seq)
     enc_seq = enc_seq.reshape([1, n_encoder_cells, n_notes])
     dec_seq = dec_seq.reshape([1, n_decoder_cells, n_notes])
     return enc_seq, dec_seq
 
 
 def song_threshold(song: np.array):
-    pitch = song[:, 0:_pitch_vocabs_length]
-    velocity = song[:, _pitch_vocabs_length:]
-    pitch = np.argmax(pitch, axis=1)
-    velocity = np.argmax(velocity, axis=1)
-    return pitch, velocity
+    song = np.argmax(song, axis=1)
+    return song
 
-#
-# if __name__ == '__main__':
-#     x, y = generate_sequences()
-#     print()
+
+def random_length():
+    x = random.choice(list(range(60, 120)))
+    return int(x / 0.07)
+
+
+if __name__ == '__main__':
+    generate_data('../data_mining/database/classical/', 'Piano right', '4')
+    print()

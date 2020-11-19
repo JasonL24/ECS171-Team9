@@ -1,12 +1,21 @@
 from models.utils import *
 from models.music_nn import *
 
-enc, dec = generate_sequences()
-
 models = MusicNN()
 models.load_weights('./trained_models/big_set')
-song = models.generate_songs(enc, dec, 900)
-np_song = np.array(song)
-pitches, velocities = song_threshold(np_song)
-print(pitches)
-print(velocities)
+
+
+def generate_song(length: int = None):
+    if not length:
+        length = random_length()
+
+    enc, dec = generate_sequences()
+    song = models.generate_songs(enc, dec, length)
+    np_song = np.array(song)
+    return song_threshold(np_song)
+
+
+if __name__ == '__main__':
+    pitches, velocities = generate_song()
+    print(pitches)
+    print(velocities)
