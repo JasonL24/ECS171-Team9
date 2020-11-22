@@ -1,12 +1,13 @@
-import random
 import os
+import random
+import pickle
 import pandas as pd
 import numpy as np
 from models.define import *
 from sklearn.cluster import KMeans
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.preprocessing import OneHotEncoder
-
+from sklearn.model_selection import train_test_split
 
 _lof_filter = LocalOutlierFactor(n_neighbors=n_notes)
 _kMeans = KMeans(n_clusters=n_notes, random_state=0)
@@ -103,7 +104,7 @@ def batch_randomize(batches: list) -> np.array:
     return batches
 
 
-def clustering_notes(notes_dict: list, batches: np.array) -> np.array:
+def clustering_notes(notes_dict: list, batches: np.array, n) -> np.array:
     notes_dict = np.concatenate(notes_dict)
     # batches = np.concatenate(batches)
 
@@ -111,6 +112,8 @@ def clustering_notes(notes_dict: list, batches: np.array) -> np.array:
     outliers_index = np.where(outliers == -1)
     notes_dict = np.delete(notes_dict, outliers_index[0], axis=0)
     _kMeans.fit(notes_dict)
+
+    pickle.dump(_kMeans, open("./dataset/kmeans_" + n + ".sklearn", 'wb'))
     print('Outliers: ', len(outliers_index[0]))
 
     tmp_batches = list()
@@ -137,7 +140,7 @@ def generate_data(dataset_dir, part, n):
             continue
 
     batches = batch_randomize(batches)
-    batches = clustering_notes(notes_dict, batches)
+    batches = clustering_notes(notes_dict, batches, n)
     dx, dy = split_data(batches, n_encoder_cells, n_decoder_cells)
     s_dy = shift_y(dy)
 
@@ -146,16 +149,29 @@ def generate_data(dataset_dir, part, n):
     np.save('./dataset/shifted_decoder_data_' + n + '.npy', s_dy)
 
 
-def load_train_data(n):
+def load_train_data(n, ratio=0.2):
     dx = np.load('./dataset/encoder_data_' + n + '.npy')
     dy = np.load('./dataset/decoder_data_' + n + '.npy')
     s_dy = np.load('./dataset/shifted_decoder_data_' + n + '.npy')
-    return dx, s_dy, dy
+
+    train_dx, test_dx, train_dy, test_dy, train_sdy, test_sdy = \
+        train_test_split(dx, dy, s_dy, test_size=ratio)
+    return [train_dx, train_sdy, train_dy], [test_dx, test_sdy, test_dy]
+
+
+def better_seq(n):
+    data, _ = load_train_data(n, 0.99)
+    dx = data[0]
+    sdy = data[1]
+    return dx[0:1, :, :], sdy[0:1, :, :]
 
 
 def generate_sequences():
     rand_seq = list()
     for i in range(n_length):
+        if i == n_encoder_cells:
+            rand_seq.append(0)
+            continue
         rand_seq.append(random.choice(_k_vocabs))
 
     enc_seq = np.array(rand_seq[0:n_encoder_cells]).reshape((-1, 1))
@@ -164,6 +180,7 @@ def generate_sequences():
     dec_seq = encode_df(dec_seq)
     enc_seq = enc_seq.reshape([1, n_encoder_cells, n_notes])
     dec_seq = dec_seq.reshape([1, n_decoder_cells, n_notes])
+    # return np.zeros((1, n_encoder_cells, n_notes)), np.zeros((1, n_decoder_cells, n_notes))
     return enc_seq, dec_seq
 
 
@@ -175,6 +192,18 @@ def song_threshold(song: np.array):
 def random_length():
     x = random.choice(list(range(60, 120)))
     return int(x / 0.07)
+
+
+def decode_song(song, n):
+    k_mean_model = pickle.load(open("./dataset/kmeans_" + n + ".sklearn", 'rb'))
+    centers = k_mean_model.cluster_centers_
+    # print(centers)
+    dec_pitch = list()
+    dec_vel = list()
+    for note in song:
+        dec_pitch.append(int(centers[note, 0]))
+        dec_vel.append(int(centers[note, 1]))
+    return dec_pitch, dec_vel
 
 
 if __name__ == '__main__':

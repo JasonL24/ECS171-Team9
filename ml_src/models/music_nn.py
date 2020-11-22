@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow import keras
 from models.define import *
-
+import numpy as np
 
 def _build_encoder_nn():
     encoder_inputs = keras.layers.Input(shape=[n_encoder_cells, n_notes, ], dtype=tf.float32)
@@ -82,12 +82,6 @@ class MusicNN:
         model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
         return model
 
-    # DEPRECATED LOL
-    # def load_models(self, path):
-    #     self.inf_enc = keras.models.load_model(path + '/inf_enc.h5')
-    #     self.inf_dec = keras.models.load_model(path + '/inf_dec.h5')
-    #     self.train_model = keras.models.load_model(path + '/train_model.h5')
-
     def load_weights(self, path):
         self.inf_enc.load_weights(path + '/inf_enc.h5')
         self.inf_dec.load_weights(path + '/inf_dec.h5')
@@ -102,14 +96,21 @@ class MusicNN:
         self.path = path
 
     def generate_songs(self, enc_src, dec_src, length):
-        states = self.inf_enc.predict(enc_src)
-
+        pre_seq = enc_src
         target_seq = dec_src
         song = list()
+        states = self.inf_enc.predict(pre_seq)
+
         for t in range(length):
             y_pred, state_1, state_2, state_3 = self.inf_dec.predict(x=[target_seq] + states)
             song.append(y_pred[0, 0, :])
             states = [state_1, state_2, state_3]
-            target_seq = y_pred
-            # print(t)
+
+            y_pred = y_pred[0, :, :]
+            b = np.zeros_like(y_pred)
+            b[np.arange(n_decoder_cells), np.argmax(y_pred, axis=1)] = 1
+            y_pred = b
+            target_seq = y_pred.reshape((1, n_decoder_cells, n_notes))
+            if t % 10 == 0:
+                print(t)
         return song

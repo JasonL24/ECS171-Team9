@@ -1,0 +1,86 @@
+# Test training with three songs only. 128 notes and 64 neurons
+
+Big Epoch: 0 Model Score: 0.318, Model saved at 15:40:40
+
+Big Epoch: 1 Model Score: 0.423, Model saved at 15:40:43
+
+Big Epoch: 2 Model Score: 0.442, Model saved at 15:40:45
+
+Big Epoch: 3 Model Score: 0.440, Model saved at 15:40:47
+
+Big Epoch: 4 Model Score: 0.438, Model saved at 15:40:50
+
+Big Epoch: 5 Model Score: 0.447, Model saved at 15:40:52
+
+Big Epoch: 6 Model Score: 0.442, Model saved at 15:40:54
+
+Big Epoch: 7 Model Score: 0.439, Model saved at 15:40:56
+
+Big Epoch: 8 Model Score: 0.434, Model saved at 15:40:59
+
+Big Epoch: 9 Model Score: 0.428, Model saved at 15:41:01
+
+Big Epoch: 10 Model Score: 0.438, Model saved at 15:41:03
+
+Big Epoch: 11 Model Score: 0.425, Model saved at 15:41:05
+
+Big Epoch: 12 Model Score: 0.420, Model saved at 15:41:08
+
+Big Epoch: 13 Model Score: 0.432, Model saved at 15:41:10
+
+Big Epoch: 14 Model Score: 0.428, Model saved at 15:41:12
+
+Big Epoch: 15 Model Score: 0.422, Model saved at 15:41:14
+
+Big Epoch: 16 Model Score: 0.395, Model saved at 15:41:17
+
+Big Epoch: 17 Model Score: 0.425, Model saved at 15:41:19
+
+Big Epoch: 18 Model Score: 0.423, Model saved at 15:41:21
+
+Big Epoch: 19 Model Score: 0.417, Model saved at 15:41:24
+
+Big Epoch: 0 Model Score: 0.690, Model saved at 16:04:51
+
+Big Epoch: 1 Model Score: 0.682, Model saved at 16:05:16
+
+Big Epoch: 2 Model Score: 0.682, Model saved at 16:05:42
+
+Big Epoch: 3 Model Score: 0.666, Model saved at 16:06:07
+
+Big Epoch: 4 Model Score: 0.653, Model saved at 16:06:32
+
+Big Epoch: 5 Model Score: 0.647, Model saved at 16:06:57
+
+Big Epoch: 6 Model Score: 0.633, Model saved at 16:07:22
+
+Big Epoch: 7 Model Score: 0.629, Model saved at 16:07:47
+
+Big Epoch: 8 Model Score: 0.629, Model saved at 16:08:12
+
+Big Epoch: 9 Model Score: 0.622, Model saved at 16:08:37
+
+Big Epoch: 10 Model Score: 0.618, Model saved at 16:09:02
+
+Big Epoch: 11 Model Score: 0.614, Model saved at 16:09:27
+
+Big Epoch: 12 Model Score: 0.615, Model saved at 16:09:52
+
+Big Epoch: 13 Model Score: 0.616, Model saved at 16:10:17
+
+Big Epoch: 14 Model Score: 0.618, Model saved at 16:10:43
+
+Big Epoch: 15 Model Score: 0.615, Model saved at 16:11:08
+
+Big Epoch: 16 Model Score: 0.617, Model saved at 16:11:33
+
+Big Epoch: 17 Model Score: 0.605, Model saved at 16:11:58
+
+Big Epoch: 18 Model Score: 0.608, Model saved at 16:12:23
+
+Big Epoch: 19 Model Score: 0.613, Model saved at 16:12:48
+
+Big Epoch: 0 Model Score: 0.841, Model saved at 16:19:22
+
+Big Epoch: 1 Model Score: 0.818, Model saved at 16:19:47
+
