@@ -1,21 +1,38 @@
+import pretty_midi
 from models.utils import *
 from models.music_nn import *
-import pretty_midi
+from firebase_admin import credentials, initialize_app, storage
+
 
 delta = 0.07
 models = MusicNN()
 models.load_weights('./trained_models/big_set')
-txt_dir = './'
-newMidi_dir = './newMidi/'
+txt_dir = './txt_song/'
+newMidi_dir = './midi_song/'
 
 
-def main():
-    pitches, velocities = generate_song(100)
-    song_to_txt([pitches, velocities], 100)
-    txt_to_mid()
+def generate_song():
+    pitches, velocities = _get_sequence(100)
+    _song_to_txt([pitches, velocities], 100)
+    _txt_to_mid()
+
+    # Init firebase with your credentials
+    cred = credentials.Certificate('../frontend/group9/src/firebase.js')
+    initialize_app(cred, {'storageBucket': 'ecs171group9.appspot.com'})
+
+    # Put your local file path
+    file_name = "myImage.jpg"
+    bucket = storage.bucket()
+    blob = bucket.blob(file_name)
+    blob.upload_from_filename(file_name)
+
+    # Opt : if you want to make public access from the URL
+    blob.make_public()
+
+    print("your file url", blob.public_url)
 
 
-def generate_song(length: int = 30):
+def _get_sequence(length: int = 30):
     if not length:
         length = random_length()
 
@@ -25,13 +42,13 @@ def generate_song(length: int = 30):
     return decode_song(_song, '0')
 
 
-def song_to_txt(_song, length):
+def _song_to_txt(_song, length):
     dt = np.linspace(0, 0.07 * length, length + 1)
     dt = np.delete(dt, -1).reshape((1, -1))
     notes = np.array(_song)
     song_list = np.concatenate([dt, notes]).transpose()
 
-    with open('new_song.txt', 'w')as f:
+    with open('./txt_song/new_song.txt', 'w')as f:
         f.write('"New Song"\n\n')
         f.write('# Piano right\n')
         for i in range(length):
@@ -42,7 +59,7 @@ def song_to_txt(_song, length):
     return song_list
 
 
-def txt_to_mid():
+def _txt_to_mid():
     for filename in os.listdir(txt_dir):
         _filename = os.path.splitext(filename)[0]
         print(_filename)
@@ -111,4 +128,4 @@ def txt_to_mid():
 
 
 if __name__ == '__main__':
-    main()
+    generate_song()
