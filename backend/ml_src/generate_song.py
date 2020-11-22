@@ -2,6 +2,7 @@ import pretty_midi
 from models.utils import *
 from models.music_nn import *
 from firebase_admin import credentials, initialize_app, storage
+import uuid
 
 
 delta = 0.07
@@ -9,19 +10,20 @@ models = MusicNN()
 models.load_weights('./trained_models/big_set')
 txt_dir = './txt_song/'
 newMidi_dir = './midi_song/'
+song_id = ''
 
 
 def generate_song():
+    song_id = str(uuid.uuid1())[0:6]
     pitches, velocities = _get_sequence(100)
     _song_to_txt([pitches, velocities], 100)
     _txt_to_mid()
 
     # Init firebase with your credentials
-    cred = credentials.Certificate('../frontend/group9/src/firebase.js')
+    cred = credentials.Certificate('./ecs171group9-58247794b74e.json')
     initialize_app(cred, {'storageBucket': 'ecs171group9.appspot.com'})
 
-    # Put your local file path
-    file_name = "myImage.jpg"
+    file_name = newMidi_dir + song_id + '.mid'
     bucket = storage.bucket()
     blob = bucket.blob(file_name)
     blob.upload_from_filename(file_name)
@@ -124,7 +126,7 @@ def _txt_to_mid():
                     currentEndTime = endValue
         print("appending last instrument")
         song.instruments.append(current_inst)
-        song.write(newMidi_dir + _filename + '.mid')
+        song.write(newMidi_dir + song_id + '.mid')
 
 
 if __name__ == '__main__':
