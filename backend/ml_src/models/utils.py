@@ -3,7 +3,7 @@ import random
 import pickle
 import pandas as pd
 import numpy as np
-from models.define import *
+from .define import *
 from sklearn.cluster import KMeans
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.preprocessing import OneHotEncoder

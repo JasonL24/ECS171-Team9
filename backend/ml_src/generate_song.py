@@ -1,6 +1,6 @@
 import pretty_midi
-from models.utils import *
-from models.music_nn import *
+from .models.utils import *
+from .models.music_nn import *
 from firebase import firebase
 from firebase_admin import credentials, initialize_app, storage
 import uuid
@@ -8,7 +8,7 @@ import uuid
 
 delta = 0.07
 models = MusicNN()
-models.load_weights('./trained_models/big_set')
+models.load_weights('./ml_src/trained_models/big_set')
 txt_dir = './txt_song/'
 newMidi_dir = './midi_song/'
 song_id = str(uuid.uuid1())[0:6]

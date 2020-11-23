@@ -1,5 +1,6 @@
 from flask_restful import Resource
-from ..ml_src.generate_song import generate_song
+import sys
+from ml_src.generate_song import generate_song
 
 class Generate(Resource):
     def get(self):
