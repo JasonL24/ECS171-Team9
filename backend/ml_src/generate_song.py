@@ -1,6 +1,7 @@
 import pretty_midi
 from models.utils import *
 from models.music_nn import *
+from firebase import firebase
 from firebase_admin import credentials, initialize_app, storage
 import uuid
 
@@ -13,12 +14,15 @@ newMidi_dir = './midi_song/'
 song_id = str(uuid.uuid1())[0:6]
 
 
+
 def generate_song():
-    pitches, velocities = _get_sequence(100)
-    _song_to_txt([pitches, velocities], 100)
+    song_length = 100
+    pitches, velocities = _get_sequence(song_length)
+    _song_to_txt([pitches, velocities], song_length)
     _txt_to_mid()
 
     # Init firebase with your credentials
+    fb = firebase.FirebaseApplication("https://ecs171group9.firebaseio.com", None)
     cred = credentials.Certificate('./ecs171group9-58247794b74e.json')
     initialize_app(cred, {'storageBucket': 'ecs171group9.appspot.com'})
 
@@ -30,7 +34,17 @@ def generate_song():
     # Opt : if you want to make public access from the URL
     blob.make_public()
 
-    print("your file url", blob.public_url)
+    song_obj = {
+        'name': "Temporary name",
+        'duration': str(song_length * .07),
+        'song_id': song_id,
+        'genres': "Classical"
+    }
+    url = 'Library/' + song_id
+    res = fb.patch(url, song_obj)
+    print(res)
+
+    return song_id
 
 
 def _get_sequence(length: int = 30):
