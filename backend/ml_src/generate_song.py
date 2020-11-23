@@ -1,8 +1,8 @@
 import pretty_midi
 from .models.utils import *
 from .models.music_nn import *
-from firebase import firebase
-from firebase_admin import credentials, initialize_app, storage
+from . import *
+from firebase_admin import storage
 import uuid
 
 
@@ -22,10 +22,6 @@ def generate_song():
     _txt_to_mid()
 
     # Init firebase with your credentials
-    fb = firebase.FirebaseApplication("https://ecs171group9.firebaseio.com", None)
-    cred = credentials.Certificate('./ml_src/ecs171group9-58247794b74e.json')
-    initialize_app(cred, {'storageBucket': 'ecs171group9.appspot.com'})
-
     file_name = newMidi_dir + song_id + '.mid'
     bucket = storage.bucket()
     blob = bucket.blob(file_name)
