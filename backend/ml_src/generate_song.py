@@ -10,11 +10,10 @@ models = MusicNN()
 models.load_weights('./trained_models/big_set')
 txt_dir = './txt_song/'
 newMidi_dir = './midi_song/'
-song_id = ''
+song_id = str(uuid.uuid1())[0:6]
 
 
 def generate_song():
-    song_id = str(uuid.uuid1())[0:6]
     pitches, velocities = _get_sequence(100)
     _song_to_txt([pitches, velocities], 100)
     _txt_to_mid()
