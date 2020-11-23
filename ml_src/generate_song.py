@@ -3,7 +3,6 @@ from models.utils import *
 from models.music_nn import *
 from firebase_admin import credentials, initialize_app, storage
 
-delta = 0.07
 models = MusicNN()
 models.load_weights('./trained_models/duration')
 txt_dir = './txt_song/'
@@ -11,8 +10,9 @@ newMidi_dir = './midi_song/'
 
 
 def generate_song():
-    durations, pitches, velocities = _get_sequence(30)
-    _song_to_txt([durations, pitches, velocities], 30)
+    durations, pitches, velocities = _get_sequence(90)
+    _song_to_txt([durations, pitches, velocities], 90)
+    _duration_to_midi()
     # _txt_to_mid()
 
     # # Init firebase with your credentials
@@ -52,71 +52,28 @@ def _song_to_txt(_song, length):
             f.write(string)
 
 
-def _txt_to_mid():
+def _duration_to_midi():
     for filename in os.listdir(txt_dir):
         _filename = os.path.splitext(filename)[0]
-        print(_filename)
-
-        file = open(txt_dir + filename, 'r')
-        lines = file.readlines()
-
-        # Create a PrettyMIDI object
         song = pretty_midi.PrettyMIDI()
-        instrument_program = pretty_midi.instrument_name_to_program('Cello')
-        current_inst = pretty_midi.Instrument(program=instrument_program)
-
-        # Skip tyhe file name
-        line_count = 0
-        # track if we have an instrument already or not
-        inst = 0
-        # track last pitch
-        currentPitch = 0
-        currentVelocity = 0
-        currentStartTime = 0
-        currentEndTime = 0
-        for line in lines:
-            if line_count == 0:
-                line_count += 1
-                continue
-            if '#' in line:
-                if inst:
-                    print("##")
-                    print("appending insturment")
-                    print("##")
-                    song.instruments.append(current_inst)
-                else:
-                    inst = 1
-
-                print("Instrument Found: " + line[2:-1])
-                # Create an Instrument instance for the instrument
-                if line[2:-1] == "Piano left":
+        ptr = 0
+        with open(txt_dir + filename, 'r') as f:
+            for line in f:
+                if line[0] == '"' or line == '\n':
+                    continue  # song name
+                elif line[0] == '#':
                     instrument_program = pretty_midi.instrument_name_to_program("acoustic grand piano")
-                elif line[2:-1] == "Piano right":
-                    instrument_program = pretty_midi.instrument_name_to_program("acoustic grand piano")
+                    inst = pretty_midi.Instrument(program=instrument_program)
                 else:
-                    instrument_program = pretty_midi.instrument_name_to_program(line[2:-1])
-                current_inst = pretty_midi.Instrument(program=instrument_program)
-
-            else:
-                line = line.strip()
-                token = line.split(' ')
-                if token[0] == "":
-                    print("skipping empty line")
-                    continue
-                print(token)
-
-                endValue = float(float(token[0]) + delta)
-                if int(token[1]) != currentPitch:
-                    note = pretty_midi.Note(velocity=currentVelocity, pitch=currentPitch, start=currentStartTime,
-                                            end=currentEndTime)
-                    current_inst.notes.append(note)
-                    currentStartTime = float(token[0])
-                    currentPitch = int(token[1])
-                    currentVelocity = int(token[2])
-                else:
-                    currentEndTime = endValue
-        print("appending last instrument")
-        song.instruments.append(current_inst)
+                    line = line.split()
+                    if line[1] == line[2] == '0':
+                        ptr += float(line[0])
+                    else:
+                        note = pretty_midi.Note(start=ptr, end=ptr + float(line[0]), pitch=int(line[1]),
+                                                velocity=int(line[2]))
+                        inst.notes.append(note)
+                        ptr += float(line[0])
+        song.instruments.append(inst)
         song.write(newMidi_dir + _filename + '.mid')
 
 
