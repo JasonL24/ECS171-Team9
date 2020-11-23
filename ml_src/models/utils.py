@@ -38,7 +38,7 @@ def random_select_batch(df: pd.DataFrame, target_length: int, batch_size: int = 
     # random sample
     samples = random.sample(range(song_length - target_length), batch_size)
 
-    batch = np.zeros((batch_size, target_length, 2))
+    batch = np.zeros((batch_size, target_length, 3))
     for i, j in zip(samples, range(batch_size)):
         line = df.loc[i: i + target_length - 1, :].to_numpy()
         batch[j, :, :] = line
@@ -52,10 +52,10 @@ def read_song(file: str, part: str) -> pd.DataFrame:
     :param part: the targeted part of the song
     :return: a pandas dataframe of the song
     """
-    df = pd.DataFrame([[0, 0]], columns=[0, 1])
-    with open(file) as file:
+    df = pd.DataFrame([[0, 0, 0]], columns=[0, 1, 2])
+    with open(file, 'r') as f:
         read = False
-        for i, line in enumerate(file):
+        for i, line in enumerate(f):
             if line[0] == "\"":
                 continue  # song name
             if line[0] == "#":
@@ -67,8 +67,8 @@ def read_song(file: str, part: str) -> pd.DataFrame:
                     break
             if read:
                 line = line.split()
-                line = [int(x) for x in line[1:]]
-                series = pd.Series(line, index=[0, 1])
+                line = [float(line[0])] + [int(x) for x in line[1:]]
+                series = pd.Series(line, index=[0, 1, 2])
                 df.loc[i] = series
     return df
 
@@ -90,12 +90,6 @@ def shift_y(y: np.array):
     zeros = np.zeros([batch_size, 1, n_notes])
     y_shift = np.concatenate([zeros, y], axis=1)
     return y_shift[:, :-1, :]
-
-
-def organize_data(x, y):
-    y_shift = shift_y(y)
-    x = np.concatenate([x, y_shift])
-    return x, y
 
 
 def batch_randomize(batches: list) -> np.array:
@@ -120,7 +114,7 @@ def clustering_notes(notes_dict: list, batches: np.array, n) -> np.array:
     for batch in batches:
         tmp_batch = list()
         for step in batch:
-            k_batch = _kMeans.predict(step.reshape(1, 2))
+            k_batch = _kMeans.predict(step.reshape(1, 3))
             tmp_batch.append(k_batch)
         encoded_k = encode_df(np.array(tmp_batch).reshape((-1, 1)))
         tmp_batches.append(encoded_k)
@@ -198,14 +192,16 @@ def decode_song(song, n):
     k_mean_model = pickle.load(open("./dataset/kmeans_" + n + ".sklearn", 'rb'))
     centers = k_mean_model.cluster_centers_
     # print(centers)
+    dec_duration = list()
     dec_pitch = list()
     dec_vel = list()
     for note in song:
-        dec_pitch.append(int(centers[note, 0]))
-        dec_vel.append(int(centers[note, 1]))
-    return dec_pitch, dec_vel
+        dec_duration.append(centers[note, 0])
+        dec_pitch.append(int(centers[note, 1]))
+        dec_vel.append(int(centers[note, 2]))
+    return dec_duration, dec_pitch, dec_vel
 
 
 if __name__ == '__main__':
-    generate_data('../data_mining/database/classical/', 'Piano right', '4')
+    generate_data('../data_mining/database/duration_parsed/', 'Piano right', '4')
     print()

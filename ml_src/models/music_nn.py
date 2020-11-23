@@ -3,6 +3,7 @@ from tensorflow import keras
 from models.define import *
 import numpy as np
 
+
 def _build_encoder_nn():
     encoder_inputs = keras.layers.Input(shape=[n_encoder_cells, n_notes, ], dtype=tf.float32)
     encoder_i = keras.layers.GRU(n_neurons,
@@ -87,7 +88,7 @@ class MusicNN:
         self.inf_dec.load_weights(path + '/inf_dec.h5')
         self.train_model.load_weights(path + '/train_model.h5')
 
-    def save_models(self):
+    def save_weights(self):
         self.inf_enc.save(self.path + '/inf_enc.h5')
         self.inf_dec.save(self.path + '/inf_dec.h5')
         self.train_model.save(self.path + '/train_model.h5')

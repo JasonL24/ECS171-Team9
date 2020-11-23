@@ -3,33 +3,32 @@ from models.utils import *
 from models.music_nn import *
 from firebase_admin import credentials, initialize_app, storage
 
-
 delta = 0.07
 models = MusicNN()
-models.load_weights('./trained_models/big_set')
+models.load_weights('./trained_models/duration')
 txt_dir = './txt_song/'
 newMidi_dir = './midi_song/'
 
 
 def generate_song():
-    pitches, velocities = _get_sequence(100)
-    _song_to_txt([pitches, velocities], 100)
-    _txt_to_mid()
+    durations, pitches, velocities = _get_sequence(30)
+    _song_to_txt([durations, pitches, velocities], 30)
+    # _txt_to_mid()
 
-    # Init firebase with your credentials
-    cred = credentials.Certificate('../frontend/group9/src/firebase.js')
-    initialize_app(cred, {'storageBucket': 'ecs171group9.appspot.com'})
-
-    # Put your local file path
-    file_name = "myImage.jpg"
-    bucket = storage.bucket()
-    blob = bucket.blob(file_name)
-    blob.upload_from_filename(file_name)
-
-    # Opt : if you want to make public access from the URL
-    blob.make_public()
-
-    print("your file url", blob.public_url)
+    # # Init firebase with your credentials
+    # cred = credentials.Certificate('../frontend/group9/src/firebase.js')
+    # initialize_app(cred, {'storageBucket': 'ecs171group9.appspot.com'})
+    #
+    # # Put your local file path
+    # file_name = "myImage.jpg"
+    # bucket = storage.bucket()
+    # blob = bucket.blob(file_name)
+    # blob.upload_from_filename(file_name)
+    #
+    # # Opt : if you want to make public access from the URL
+    # blob.make_public()
+    #
+    # print("your file url", blob.public_url)
 
 
 def _get_sequence(length: int = 30):
@@ -39,24 +38,18 @@ def _get_sequence(length: int = 30):
     enc, dec = generate_sequences()  # ('3')
     _song = models.generate_songs(enc, dec, length)
     _song = song_threshold(_song)
-    return decode_song(_song, '0')
+    return decode_song(_song, '4')
 
 
 def _song_to_txt(_song, length):
-    dt = np.linspace(0, 0.07 * length, length + 1)
-    dt = np.delete(dt, -1).reshape((1, -1))
-    notes = np.array(_song)
-    song_list = np.concatenate([dt, notes]).transpose()
-
+    _song = np.array(_song)
     with open('./txt_song/new_song.txt', 'w')as f:
         f.write('"New Song"\n\n')
         f.write('# Piano right\n')
         for i in range(length):
-            time, pitch, vel = song_list[i, :]
-            string = '%.6f %d %d\n' % (time, pitch, vel)
+            duration, pitch, vel = _song[:, i]
+            string = '%.6f %d %d\n' % (duration, pitch, vel)
             f.write(string)
-
-    return song_list
 
 
 def _txt_to_mid():

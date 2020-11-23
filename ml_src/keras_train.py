@@ -72,7 +72,7 @@ def train(models, train_data, test_data, big_epoch, epoch):
     y = test_data[2]
     score = models.train_model.evaluate(x=[x, y_s], y=y)[1]
 
-    models.save_models()
+    models.save_weights()
     now = datetime.now()
     current_time = now.strftime("%H:%M:%S")
     with open(models.path + '/train.log', 'a') as f:
