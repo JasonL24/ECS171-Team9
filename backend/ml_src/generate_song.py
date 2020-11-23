@@ -9,8 +9,8 @@ import uuid
 delta = 0.07
 models = MusicNN()
 models.load_weights('./ml_src/trained_models/big_set')
-txt_dir = './txt_song/'
-newMidi_dir = './midi_song/'
+txt_dir = './ml_src/txt_song/'
+newMidi_dir = './ml_src/midi_song/'
 song_id = str(uuid.uuid1())[0:6]
 
 
@@ -23,7 +23,7 @@ def generate_song():
 
     # Init firebase with your credentials
     fb = firebase.FirebaseApplication("https://ecs171group9.firebaseio.com", None)
-    cred = credentials.Certificate('./ecs171group9-58247794b74e.json')
+    cred = credentials.Certificate('./ml_src/ecs171group9-58247794b74e.json')
     initialize_app(cred, {'storageBucket': 'ecs171group9.appspot.com'})
 
     file_name = newMidi_dir + song_id + '.mid'
@@ -63,7 +63,7 @@ def _song_to_txt(_song, length):
     notes = np.array(_song)
     song_list = np.concatenate([dt, notes]).transpose()
 
-    with open('./txt_song/new_song.txt', 'w')as f:
+    with open('./ml_src/txt_song/new_song.txt', 'w')as f:
         f.write('"New Song"\n\n')
         f.write('# Piano right\n')
         for i in range(length):
