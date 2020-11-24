@@ -5,7 +5,6 @@ from . import *
 from firebase_admin import storage
 import uuid
 
-
 delta = 0.07
 models = MusicNN()
 models.load_weights('./ml_src/trained_models/big_set')
@@ -47,7 +46,8 @@ def _get_sequence(length: int = 30):
     if not length:
         length = random_length()
 
-    enc, dec = generate_sequences()  # ('3')
+    # enc, dec = generate_sequences()
+    enc, dec = better_seq('0')
     _song = models.generate_songs(enc, dec, length)
     _song = song_threshold(_song)
     return decode_song(_song, '0')
