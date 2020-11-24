@@ -64,7 +64,7 @@ def _duration_to_midi():
                 if line[0] == '"' or line == '\n':
                     continue  # song name
                 elif line[0] == '#':
-                    instrument_program = pretty_midi.instrument_name_to_program("acoustic grand piano")
+                    instrument_program = pretty_midi.instrument_name_to_program("FX4 Atmosphere")
                     inst = pretty_midi.Instrument(program=instrument_program)
                 else:
                     line = line.split()

@@ -10,7 +10,7 @@ from models.utils import *
 from models.music_nn import *
 from datetime import datetime
 
-dataset_dir = '../data_mining/database/mozart/'
+dataset_dir = '../data_mining/database/duration_parsed/'
 
 
 def main(args):
