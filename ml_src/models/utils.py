@@ -203,5 +203,6 @@ def decode_song(song, n):
 
 
 if __name__ == '__main__':
-    generate_data('../data_mining/database/duration_parsed/', 'Piano right', '4')
+    # generate_data('../data_mining/database/duration_parsed/', 'Piano right', '4')
+    decode_song('gerry', '4')
     print()

@@ -10,14 +10,14 @@ from models.utils import *
 from models.music_nn import *
 from datetime import datetime
 
-dataset_dir = '../data_mining/database/classical/'
+dataset_dir = '../data_mining/database/mozart/'
 
 
 def main(args):
     models = MusicNN()
     train_data, test_data = None, None
     epoch = 30
-    # big_epoch = 10
+    n = '4'
     for arg in args[1:]:
         arg = arg.split('=')
         if arg[0] == 'model':
@@ -36,8 +36,6 @@ def main(args):
                 train_data, test_data = load_train_data(n)
         elif arg[0] == 'epoch':
             epoch = int(arg[1])
-        # elif arg[0] == 'big_epoch':
-        #     big_epoch = int(arg[1])
         else:
             raise ValueError
 

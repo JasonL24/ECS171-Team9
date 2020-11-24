@@ -1,8 +1,8 @@
 import os
 import pretty_midi
 
-midi_dir = './local_MIDI/'
-parsed_dir = './database/duration_parsed/'
+midi_dir = './local_MIDI/mozart/'
+parsed_dir = './database/mozart/'
 
 for filename in os.listdir(midi_dir):
     print(filename)

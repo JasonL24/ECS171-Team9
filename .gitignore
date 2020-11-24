@@ -2,4 +2,4 @@
 *.mid
 *.pyc
 *.npy
-./data_mining/database/modern/*
+./data_mining/database/*

@@ -7,6 +7,7 @@ models = MusicNN()
 models.load_weights('./trained_models/duration')
 txt_dir = './txt_song/'
 newMidi_dir = './midi_song/'
+n = '4'
 
 
 def generate_song():
@@ -35,10 +36,11 @@ def _get_sequence(length: int = 30):
     if not length:
         length = random_length()
 
+    # enc, dec = better_seq(n)  # ('3')
     enc, dec = generate_sequences()  # ('3')
     _song = models.generate_songs(enc, dec, length)
     _song = song_threshold(_song)
-    return decode_song(_song, '4')
+    return decode_song(_song, n)
 
 
 def _song_to_txt(_song, length):
