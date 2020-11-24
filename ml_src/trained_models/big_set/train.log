@@ -1,5 +1,5 @@
 # Complete training with all classical songs only. 256 notes and 64 neurons about 85% accuracy right now
-# Use Dataset 0
+# Use Dataset 0 120 encoder, 20 decoder
 
 Big Epoch: 0 Model Score: 0.617, Model saved at 20:46:18
 

@@ -5,9 +5,10 @@ from firebase_admin import credentials, initialize_app, storage
 
 delta = 0.07
 models = MusicNN()
-models.load_weights('./trained_models/big_set')
+models.load_weights('./trained_models/64notes_equal_enc_dec')
 txt_dir = './txt_song/'
 newMidi_dir = './midi_song/'
+n = '0'
 
 
 def generate_song():
@@ -36,10 +37,10 @@ def _get_sequence(length: int = 30):
         length = random_length()
 
     # enc, dec = generate_sequences()
-    enc, dec = better_seq('0')
+    enc, dec = better_seq(n)
     _song = models.generate_songs(enc, dec, length)
     _song = song_threshold(_song)
-    return decode_song(_song, '0')
+    return decode_song(_song, n)
 
 
 def _song_to_txt(_song, length):
