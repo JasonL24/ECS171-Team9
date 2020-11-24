@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow import keras
-from models.define import *
+from .define import *
 import numpy as np
 
 def _build_encoder_nn():
@@ -64,7 +64,7 @@ class MusicNN:
         self.inf_enc = self._encoder_model()
         self.inf_dec = self._decoder_test_model()
         self.train_model = self._decoder_train_model()
-        self.path = './trained_models'
+        self.path = './ml_src/trained_models'
 
     def _encoder_model(self):
         input_layer, states = self.encoder_prop
@@ -88,9 +88,9 @@ class MusicNN:
         self.train_model.load_weights(path + '/train_model.h5')
 
     def save_models(self):
-        self.inf_enc.save(self.path + '/inf_enc.h5')
-        self.inf_dec.save(self.path + '/inf_dec.h5')
-        self.train_model.save(self.path + '/train_model.h5')
+        self.inf_enc.save(self.path + '/big_set/inf_enc.h5')
+        self.inf_dec.save(self.path + '/big_set/inf_dec.h5')
+        self.train_model.save(self.path + '/big_set/train_model.h5')
 
     def set_path(self, path):
         self.path = path

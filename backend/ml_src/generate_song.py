@@ -1,34 +1,45 @@
 import pretty_midi
-from models.utils import *
-from models.music_nn import *
-from firebase_admin import credentials, initialize_app, storage
+from .models.utils import *
+from .models.music_nn import *
+from . import *
+from firebase_admin import storage
+import uuid
 
 delta = 0.07
 models = MusicNN()
-models.load_weights('./trained_models/big_set')
-txt_dir = './txt_song/'
-newMidi_dir = './midi_song/'
+models.load_weights('./ml_src/trained_models/big_set')
+txt_dir = './ml_src/txt_song/'
+newMidi_dir = './ml_src/midi_song/'
+song_id = str(uuid.uuid1())[0:6]
+
 
 
 def generate_song():
-    pitches, velocities = _get_sequence(100)
-    _song_to_txt([pitches, velocities], 100)
+    song_length = 100
+    pitches, velocities = _get_sequence(song_length)
+    _song_to_txt([pitches, velocities], song_length)
     _txt_to_mid()
 
-    # # Init firebase with your credentials
-    # cred = credentials.Certificate('../frontend/group9/src/firebase.js')
-    # initialize_app(cred, {'storageBucket': 'ecs171group9.appspot.com'})
-    #
-    # # Put your local file path
-    # file_name = "myImage.jpg"
-    # bucket = storage.bucket()
-    # blob = bucket.blob(file_name)
-    # blob.upload_from_filename(file_name)
-    #
-    # # Opt : if you want to make public access from the URL
-    # blob.make_public()
-    #
-    # print("your file url", blob.public_url)
+    # Init firebase with your credentials
+    file_name = newMidi_dir + song_id + '.mid'
+    bucket = storage.bucket()
+    blob = bucket.blob(file_name)
+    blob.upload_from_filename(file_name)
+
+    # Opt : if you want to make public access from the URL
+    blob.make_public()
+
+    song_obj = {
+        'name': "Temporary name",
+        'duration': str(song_length * .07),
+        'song_id': song_id,
+        'genres': "Classical"
+    }
+    url = 'Library/' + song_id
+    res = fb.patch(url, song_obj)
+    print(res)
+
+    return song_id
 
 
 def _get_sequence(length: int = 30):
@@ -48,7 +59,7 @@ def _song_to_txt(_song, length):
     notes = np.array(_song)
     song_list = np.concatenate([dt, notes]).transpose()
 
-    with open('./txt_song/new_song.txt', 'w')as f:
+    with open('./ml_src/txt_song/new_song.txt', 'w')as f:
         f.write('"New Song"\n\n')
         f.write('# Piano right\n')
         for i in range(length):
@@ -124,7 +135,7 @@ def _txt_to_mid():
                     currentEndTime = endValue
         print("appending last instrument")
         song.instruments.append(current_inst)
-        song.write(newMidi_dir + _filename + '.mid')
+        song.write(newMidi_dir + song_id + '.mid')
 
 
 if __name__ == '__main__':
