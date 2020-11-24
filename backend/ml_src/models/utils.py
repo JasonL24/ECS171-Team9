@@ -3,7 +3,7 @@ import random
 import pickle
 import pandas as pd
 import numpy as np
-from models.define import *
+from .define import *
 from sklearn.cluster import KMeans
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.preprocessing import OneHotEncoder
@@ -195,7 +195,7 @@ def random_length():
 
 
 def decode_song(song, n):
-    k_mean_model = pickle.load(open("./dataset/kmeans_" + n + ".sklearn", 'rb'))
+    k_mean_model = pickle.load(open("./ml_src/dataset/kmeans_" + n + ".sklearn", 'rb'))
     centers = k_mean_model.cluster_centers_
     # print(centers)
     dec_pitch = list()
