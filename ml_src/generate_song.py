@@ -3,7 +3,6 @@ from models.utils import *
 from models.music_nn import *
 from firebase_admin import credentials, initialize_app, storage
 
-
 delta = 0.07
 models = MusicNN()
 models.load_weights('./trained_models/big_set')
@@ -16,27 +15,28 @@ def generate_song():
     _song_to_txt([pitches, velocities], 100)
     _txt_to_mid()
 
-    # Init firebase with your credentials
-    cred = credentials.Certificate('../frontend/group9/src/firebase.js')
-    initialize_app(cred, {'storageBucket': 'ecs171group9.appspot.com'})
-
-    # Put your local file path
-    file_name = "myImage.jpg"
-    bucket = storage.bucket()
-    blob = bucket.blob(file_name)
-    blob.upload_from_filename(file_name)
-
-    # Opt : if you want to make public access from the URL
-    blob.make_public()
-
-    print("your file url", blob.public_url)
+    # # Init firebase with your credentials
+    # cred = credentials.Certificate('../frontend/group9/src/firebase.js')
+    # initialize_app(cred, {'storageBucket': 'ecs171group9.appspot.com'})
+    #
+    # # Put your local file path
+    # file_name = "myImage.jpg"
+    # bucket = storage.bucket()
+    # blob = bucket.blob(file_name)
+    # blob.upload_from_filename(file_name)
+    #
+    # # Opt : if you want to make public access from the URL
+    # blob.make_public()
+    #
+    # print("your file url", blob.public_url)
 
 
 def _get_sequence(length: int = 30):
     if not length:
         length = random_length()
 
-    enc, dec = generate_sequences()  # ('3')
+    # enc, dec = generate_sequences()
+    enc, dec = better_seq('0')
     _song = models.generate_songs(enc, dec, length)
     _song = song_threshold(_song)
     return decode_song(_song, '0')
