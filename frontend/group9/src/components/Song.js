@@ -6,6 +6,7 @@ import PauseIcon from '@material-ui/icons/Pause';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 import { fetchSong } from '../actions';
+import firebasegs from '../firebaseStorage';
 import './Song.css';
 import Navbar from './Navbar';
 
@@ -20,7 +21,11 @@ const Song = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchSong('ec40c8'));
+    const song_id = window.location.pathname.split('/')[2]
+    dispatch(fetchSong(song_id));
+    firebasegs.child('./ml_src/midi_song' + song_id + '.mid').then(function(url) {
+      MIDIjs.play(url);
+    });
   }, [])
 
   const doTimer = () => {
@@ -46,7 +51,7 @@ const Song = () => {
       setIsPaused(oldStatus => !oldStatus);
       MIDIjs.resume();
     } else {
-      MIDIjs.play('https://en.wikipedia.org/wiki/File:MIDI_sample.mid?qsrc=3044#file');
+  
     }
   }
 
