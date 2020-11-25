@@ -113,7 +113,7 @@ def clustering_notes(notes_dict: list, batches: np.array, n) -> np.array:
     notes_dict = np.delete(notes_dict, outliers_index[0], axis=0)
     _kMeans.fit(notes_dict)
 
-    pickle.dump(_kMeans, open("./dataset/kmeans_" + n + ".sklearn", 'wb'))
+    pickle.dump(_kMeans, open("./dataset/kmeans_" + str(n) + ".sklearn", 'wb'))
     print('Outliers: ', len(outliers_index[0]))
 
     tmp_batches = list()
@@ -144,15 +144,15 @@ def generate_data(dataset_dir, part, n):
     dx, dy = split_data(batches, n_encoder_cells, n_decoder_cells)
     s_dy = shift_y(dy)
 
-    np.save('./dataset/encoder_data_' + n + '.npy', dx)
-    np.save('./dataset/decoder_data_' + n + '.npy', dy)
-    np.save('./dataset/shifted_decoder_data_' + n + '.npy', s_dy)
+    np.save('./ml_src/dataset/encoder_data_' + str(n) + '.npy', dx)
+    np.save('./ml_src/dataset/decoder_data_' + str(n) + '.npy', dy)
+    np.save('./ml_src/dataset/shifted_decoder_data_' + str(n) + '.npy', s_dy)
 
 
 def load_train_data(n, ratio=0.2):
-    dx = np.load('./dataset/encoder_data_' + n + '.npy')
-    dy = np.load('./dataset/decoder_data_' + n + '.npy')
-    s_dy = np.load('./dataset/shifted_decoder_data_' + n + '.npy')
+    dx = np.load('./ml_src/dataset/encoder_data_' + str(n) + '.npy')
+    dy = np.load('./ml_src/dataset/decoder_data_' + str(n) + '.npy')
+    s_dy = np.load('./ml_src/dataset/shifted_decoder_data_' + str(n) + '.npy')
 
     train_dx, test_dx, train_dy, test_dy, train_sdy, test_sdy = \
         train_test_split(dx, dy, s_dy, test_size=ratio)
@@ -195,7 +195,7 @@ def random_length():
 
 
 def decode_song(song, n):
-    k_mean_model = pickle.load(open("./ml_src/dataset/kmeans_" + n + ".sklearn", 'rb'))
+    k_mean_model = pickle.load(open("./ml_src/dataset/kmeans_" + str(n) + ".sklearn", 'rb'))
     centers = k_mean_model.cluster_centers_
     # print(centers)
     dec_pitch = list()

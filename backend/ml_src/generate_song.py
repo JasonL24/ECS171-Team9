@@ -46,10 +46,10 @@ def _get_sequence(length: int = 30):
         length = random_length()
 
     # enc, dec = generate_sequences()
-    enc, dec = better_seq(n)
+    enc, dec = better_seq(length)
     _song = models.generate_songs(enc, dec, length)
     _song = song_threshold(_song)
-    return decode_song(_song, n)
+    return decode_song(_song, length)
 
 
 def _song_to_txt(_song, length):

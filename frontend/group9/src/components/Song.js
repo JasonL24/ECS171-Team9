@@ -1,27 +1,27 @@
-import React, {useState} from 'react';
-import { Link } from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
+import { fetchSong } from '../actions';
 import './Song.css';
 import Navbar from './Navbar';
 
 const MIDIjs = window.MIDIjs;
-
-// default song for now
-const song = {
-  title: 'Down and Out',
-  genres: 'Sad, Slow, Melancholy',
-  duration: 84
-}
 
 const Song = () => { 
   var barProgress = 0;
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
   const [timerStarted, setTimerStarted] = useState(false);
+  const song = useSelector(state => state.song)
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchSong('ec40c8'));
+  }, [])
 
   const doTimer = () => {
     if (!timerStarted) {
