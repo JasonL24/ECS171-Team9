@@ -17,14 +17,17 @@ const Song = () => {
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
   const [timerStarted, setTimerStarted] = useState(false);
-  const song = useSelector(state => state.song)
+  const song = useSelector(state => state.song.song)
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const song_id = window.location.pathname.split('/')[2]
+    // const song_id = window.location.pathname.split('/')[2]
+    const song_id = '94ba49' // temporary hard coding
     dispatch(fetchSong(song_id));
-    firebasegs.child('./ml_src/midi_song' + song_id + '.mid').then(function(url) {
-      MIDIjs.play(url);
+    const location = './ml_src/midi_song/' + song_id + '.mid';
+    firebasegs.child(location).getDownloadURL().then(function(url) {
+      console.log(url);
+      MIDIjs.play('../../../../backend/ml_src/midi_song/358ee2.mid');
     });
   }, [])
 
@@ -103,6 +106,7 @@ const Song = () => {
 };
 
 const minSecForm = (time) => {
+  var time = Number(Math.floor(time))
   var minutes = Math.floor(time / 60);
   var seconds = time - minutes * 60;
 

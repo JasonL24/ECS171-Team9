@@ -45,11 +45,11 @@ def _get_sequence(length: int = 30):
     if not length:
         length = random_length()
 
-    # enc, dec = generate_sequences()
-    enc, dec = better_seq(length)
+    n = 0
+    enc, dec = generate_sequences()
     _song = models.generate_songs(enc, dec, length)
     _song = song_threshold(_song)
-    return decode_song(_song, length)
+    return decode_song(_song, n)
 
 
 def _song_to_txt(_song, length):

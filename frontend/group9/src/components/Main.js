@@ -13,7 +13,8 @@ const Main = () => {
   const generateSong = async () => {
     setIsLoading(true);
     const res = await backend.get('/api/generate');
-    setResponse(res);
+
+    setResponse(res.data);
     setIsLoading(false);  
   }
 
@@ -35,7 +36,7 @@ const Main = () => {
         </div>
       );
     } else {
-      const destination = '/song' + response.song_id;
+      const destination = '/song/' + response.song_id;
       return (<Link to={destination}>
         <Button class="main-generate-button" color="primary" size="large" >Song Complete. Listen now!</Button>
       </Link>);
