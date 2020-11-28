@@ -19,3 +19,5 @@ tensorflow
 # gcloud
 # sseclient
 python-firebase
+midi2audio
+fluidsynth

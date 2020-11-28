@@ -4,6 +4,8 @@ from .models.music_nn import *
 from . import *
 from firebase_admin import storage
 import uuid
+from midi2audio import FluidSynth
+import subprocess
 
 delta = 0.07
 models = MusicNN()
@@ -25,7 +27,6 @@ def generate_song():
     blob = bucket.blob(file_name)
     blob.upload_from_filename(file_name)
 
-    # Opt : if you want to make public access from the URL
     blob.make_public()
 
     song_obj = {
@@ -135,6 +136,7 @@ def _txt_to_mid():
         print("appending last instrument")
         song.instruments.append(current_inst)
         song.write(newMidi_dir + song_id + '.mid')
+        #subprocess.call(['fluidsynth', '-ni', './ml_src/sound_font/default.sf2', newMidi_dir + song_id + '.mid', '-F', './ml_src/wav_song/output.wav', '-r', str(44100)])
 
 
 if __name__ == '__main__':

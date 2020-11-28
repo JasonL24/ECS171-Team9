@@ -27,7 +27,7 @@ const Song = () => {
     const location = './ml_src/midi_song/' + song_id + '.mid';
     firebasegs.child(location).getDownloadURL().then(function(url) {
       console.log(url);
-      MIDIjs.play('../../../../backend/ml_src/midi_song/358ee2.mid');
+      //MIDIjs.play('../../../../backend/ml_src/midi_song/358ee2.mid');
     });
   }, [])
 
