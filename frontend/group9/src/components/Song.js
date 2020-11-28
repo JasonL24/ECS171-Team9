@@ -10,15 +10,14 @@ import firebasegs from '../firebaseStorage';
 import './Song.css';
 import Navbar from './Navbar';
 
-const MIDIjs = window.MIDIjs;
-
 const Song = () => { 
   var barProgress = 0;
-  const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
   const [timerStarted, setTimerStarted] = useState(false);
   const song = useSelector(state => state.song.song)
   const dispatch = useDispatch();
+  var audioElement = document.getElementsByTagName("audio")[0]
+  
 
   useEffect(() => {
     // const song_id = window.location.pathname.split('/')[2]
@@ -27,41 +26,27 @@ const Song = () => {
     const location = './ml_src/midi_song/' + song_id + '.mid';
     firebasegs.child(location).getDownloadURL().then(function(url) {
       console.log(url);
-      //MIDIjs.play('../../../../backend/ml_src/midi_song/358ee2.mid');
     });
+    audioElement.src = '../0b9d60.wav';
   }, [])
 
   const doTimer = () => {
     if (!timerStarted) {
-      setTimerStarted(true);
       setInterval(() => {
-        if (!isPaused) {
-          barProgress = (progress / song.duration) * 100;
-          setProgress((oldProgress) => {
-            if (oldProgress + 1 < song.duration && !isPaused) {
-              return oldProgress + 1;
-            } else {
-              return oldProgress;
-            }
-          });
-        }
+        console.log(audioElement.currentTime)
+        setProgress(() => audioElement.currentTime);
       }, 1000);
+      setTimerStarted(true);
     }
   }
 
   const playSong = () => {
-    if (isPaused) {
-      setIsPaused(oldStatus => !oldStatus);
-      MIDIjs.resume();
-    } else {
-  
-    }
+    console.log(audioElement);
+    audioElement.play();
   }
 
   const pauseSong = () => {
-    setIsPaused(oldStatus => !oldStatus);
-    MIDIjs.pause();
-    console.log("PAUSED", isPaused);
+    audioElement.pause();
   }
 
   const renderSong = () => {
@@ -106,7 +91,7 @@ const Song = () => {
 };
 
 const minSecForm = (time) => {
-  var time = Number(Math.floor(time))
+  var time = Number(Math.floor(time));
   var minutes = Math.floor(time / 60);
   var seconds = time - minutes * 60;
 

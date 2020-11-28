@@ -1,0 +1,16 @@
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 300px;
+  flex-direction: column;
+}
+
+.process-info {
+  background-color: #f7f9e8;
+  margin-top: 120px;
+  padding: 20px 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  box-shadow: 2px 4px #888888;
+}
