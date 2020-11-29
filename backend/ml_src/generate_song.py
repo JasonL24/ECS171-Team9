@@ -136,7 +136,7 @@ def _txt_to_mid():
         print("appending last instrument")
         song.instruments.append(current_inst)
         song.write(newMidi_dir + song_id + '.mid')
-        #subprocess.call(['fluidsynth', '-ni', './ml_src/sound_font/default.sf2', newMidi_dir + song_id + '.mid', '-F', './ml_src/wav_song/output.wav', '-r', str(44100)])
+        song.write('../frontend/group9/public/midi/' + song_id + '.mid')
 
 
 if __name__ == '__main__':

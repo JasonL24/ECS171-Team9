@@ -38,7 +38,7 @@ const Main = () => {
     } else {
       const destination = '/song/' + response.song_id;
       return (<Link to={destination}>
-        <Button class="main-generate-button" color="primary" size="large" >Song Complete. Listen now!</Button>
+        <Button color="primary" size="large" >Song Complete. Listen now!</Button>
       </Link>);
     }
   }

@@ -10,43 +10,55 @@ import firebasegs from '../firebaseStorage';
 import './Song.css';
 import Navbar from './Navbar';
 
+const MIDIjs = window.MIDIjs;
+
 const Song = () => { 
   var barProgress = 0;
   const [progress, setProgress] = useState(0);
-  const [timerStarted, setTimerStarted] = useState(false);
+  const [song_loc, setSongLoc] = useState(false);
+  const [duration, setDuration] = useState(0);
+  var dur = null;
   const song = useSelector(state => state.song.song)
   const dispatch = useDispatch();
-  var audioElement = document.getElementsByTagName("audio")[0]
-  
 
   useEffect(() => {
-    // const song_id = window.location.pathname.split('/')[2]
-    const song_id = '94ba49' // temporary hard coding
+    const song_id = window.location.pathname.split('/')[2]
     dispatch(fetchSong(song_id));
     const location = './ml_src/midi_song/' + song_id + '.mid';
     firebasegs.child(location).getDownloadURL().then(function(url) {
       console.log(url);
     });
-    audioElement.src = '../0b9d60.wav';
+    const songLocation = '../midi/' + song_id +'.mid';
+    setSongLoc('../midi/' + song_id +'.mid');
+    console.log("CHECK", songLocation)
+    MIDIjs.get_duration(songLocation, function(seconds) { 
+      console.log("length", seconds);
+      setDuration((old) => seconds);
+      dur = seconds;
+    } );
+    MIDIjs.play(songLocation);
+    console.log(MIDIjs)
+    function doTimer(ev) {
+      if (ev.time <= Math.ceil(dur)) {
+        setProgress(() => ev.time);
+      }
+    }
+    MIDIjs.player_callback = doTimer;
   }, [])
 
-  const doTimer = () => {
-    if (!timerStarted) {
-      setInterval(() => {
-        console.log(audioElement.currentTime)
-        setProgress(() => audioElement.currentTime);
-      }, 1000);
-      setTimerStarted(true);
+
+
+  const playSong = () => {
+    console.log(song_loc);
+    if (Math.ceil(duration) === Math.ceil(progress)) {
+      MIDIjs.play(song_loc)
+    } else {
+      MIDIjs.resume();
     }
   }
 
-  const playSong = () => {
-    console.log(audioElement);
-    audioElement.play();
-  }
-
   const pauseSong = () => {
-    audioElement.pause();
+    MIDIjs.pause();
   }
 
   const renderSong = () => {
@@ -64,14 +76,15 @@ const Song = () => {
 
   return (
     <div>
-      {doTimer()}
       <Navbar />
       <div className="song-area">
         <div className="title-row">
           {renderSong()}
-          <Button variant="contained" color="primary">
-            Download
-          </Button>
+          <a href={song_loc} download={song_loc}>
+            <Button variant="contained" color="primary">
+              Download MIDI
+            </Button>
+          </a>
         </div>
         <LinearProgress color="primary" variant="determinate" value={barProgress}/>
         <div className="progress-row">
@@ -83,7 +96,7 @@ const Song = () => {
               <PauseIcon/>
             </Button>
           </div>
-          <h4>{minSecForm(progress)} / {minSecForm(song.duration)}</h4>
+          <h4>{minSecForm(progress)} / {minSecForm(duration)}</h4>
         </div> 
       </div>
     </div>
