@@ -14,10 +14,5 @@ pandas==1.1.4
 scikit-learn
 scipy
 tensorflow
-# firebase
-# python_jwt
-# gcloud
-# sseclient
-python-firebase
-midi2audio
-fluidsynth
+git+https://github.com/ozgur/python-firebase
+#python-firebase
