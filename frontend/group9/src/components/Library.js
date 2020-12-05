@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Helmet from 'react-helmet';
@@ -16,25 +17,23 @@ const Library = () => {
   }, []);
 
   const librarySongs = useSelector(state => state.library.songs)
-
-
   const renderSongs = () => {
+    console.log("Render log", librarySongs);
     return (
       librarySongs.map(song => {
         return (
-          <div>
+          <div id={song.song_id}>
             <Helmet>
               <style>{'body { background-color: #fff3b6 }'}</style>
             </Helmet>
             <Container maxWidth="lg">
               <li className="song-item">
-                <p className="flex-item-size">{song.name} </p>
-                <p className="flex-item-size">{song.genre}</p>
-                <p className="flex-item-size">{song.duration}</p>
-                <p className="flex-item-size">{song.bars} bars</p>
-                <p className="flex-item-size">{song.rating}/10</p>
-                <p className="flex-item-size">{song.likes} People Liked it </p> 
-                <Button className="flex-item-size" color="primary">Play</Button> 
+                <p className="flex-item-val">{song.song_id}</p>
+                <p className="flex-item-val">{song.genres}</p>
+                <p className="flex-item-val">{Math.floor(song.duration)} sec</p>
+                <Link className="flex-item-val" to={`/song/${song.song_id}`}>
+                  <Button color="primary">Play</Button>
+                </Link>
               </li>
             </Container>
           </div>
@@ -48,13 +47,10 @@ const Library = () => {
       <h1 className="library-title">Music Library</h1>
       <Container maxWidth="lg" className="titles-bolder">
         <li className="song-item">
-          <p className="flex-item-size">Name</p>
+          <p className="flex-item-size">Song ID</p>
           <p className="flex-item-size">Genre</p>
           <p className="flex-item-size">Time Length</p>
-          <p className="flex-item-size"># of Bars</p>
-          <p className="flex-item-size">Score</p>
-          <p className="flex-item-size">Likes</p> 
-          <p className="button-title">Button</p>
+          <p className="button-title">Play Song</p>
         </li>
       </Container>
       <ul className="song-list-container">

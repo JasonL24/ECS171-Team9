@@ -14,13 +14,13 @@ const Navbar = () => {
       <div className="navbar-container">
         <div>MusicSynth</div>
         <Link to="/" style={{ textDecoration: 'none' }}>
-          <Button class="navbar-titles">Home</Button>
+          <Button className="navbar-titles">Home</Button>
         </Link>
         <Link to="/about" style={{ textDecoration: 'none' }}>
-          <Button class="navbar-titles">About</Button>
+          <Button className="navbar-titles">About</Button>
         </Link>
         <Link to="/library" style={{ textDecoration: 'none' }}>    
-          <Button class="navbar-titles">Library</Button>
+          <Button className="navbar-titles">Library</Button>
         </Link>
       </div>
     </div>

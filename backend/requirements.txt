@@ -8,14 +8,11 @@ flask_marshmallow==0.8.0
 marshmallow-sqlalchemy==0.13.2
 flask-cors==3.0.9
 firebase_admin==4.4.0
-numpy==1.19.0
+numpy==1.18.5
 pretty_midi==0.2.9
 pandas==1.1.4
 scikit-learn
 scipy
 tensorflow
-#firebase
-# python_jwt
-# gcloud
-# sseclient
-python-firebase
+git+https://github.com/ozgur/python-firebase
+#python-firebase

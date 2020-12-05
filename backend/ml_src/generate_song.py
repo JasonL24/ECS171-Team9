@@ -4,6 +4,7 @@ from .models.music_nn import *
 from . import *
 from firebase_admin import storage
 import uuid
+import subprocess
 
 delta = 0.07
 models = MusicNN()
@@ -25,7 +26,6 @@ def generate_song():
     blob = bucket.blob(file_name)
     blob.upload_from_filename(file_name)
 
-    # Opt : if you want to make public access from the URL
     blob.make_public()
 
     song_obj = {
@@ -45,8 +45,8 @@ def _get_sequence(length: int = 30):
     if not length:
         length = random_length()
 
-    # enc, dec = generate_sequences()
-    enc, dec = better_seq(n)
+    n = 0
+    enc, dec = generate_sequences()
     _song = models.generate_songs(enc, dec, length)
     _song = song_threshold(_song)
     return decode_song(_song, n)
@@ -135,6 +135,7 @@ def _txt_to_mid():
         print("appending last instrument")
         song.instruments.append(current_inst)
         song.write(newMidi_dir + song_id + '.mid')
+        song.write('../frontend/group9/public/midi/' + song_id + '.mid')
 
 
 if __name__ == '__main__':

@@ -1,13 +1,13 @@
-import { FETCH_LIBRARY } from '../actions/types';
+import { FETCH_SONG } from '../actions/types';
 
 const INITAL_STATE = {
-  songs: []
+  song: {}
 }
 
 export default (state = INITAL_STATE, action) => {
   switch (action.type) {
-    case FETCH_LIBRARY:
-      state.songs = action.payload;
+    case FETCH_SONG:
+      state.song = action.payload;
       return {...state};
     default:
       return state;
