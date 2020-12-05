@@ -72,3 +72,9 @@
         height: 70px;
     }
 }
+
+.song-complete {
+    display: flex;
+    justify-content: center;
+    margin-top: 300px;
+}

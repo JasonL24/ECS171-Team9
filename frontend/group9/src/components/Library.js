@@ -28,13 +28,10 @@ const Library = () => {
             </Helmet>
             <Container maxWidth="lg">
               <li className="song-item">
-                <p className="flex-item-size">{song.name} </p>
-                <p className="flex-item-size">{song.genres}</p>
-                <p className="flex-item-size">{song.duration}</p>
-                <p className="flex-item-size">{song.bars} bars</p>
-                <p className="flex-item-size">{song.likes} People Liked it </p>
-                <p className="flex-item-size">{song.song_id}</p>
-                <Link className="flex-item-size" to={`/song/${song.song_id}`}>
+                <p className="flex-item-val">{song.song_id}</p>
+                <p className="flex-item-val">{song.genres}</p>
+                <p className="flex-item-val">{Math.floor(song.duration)} sec</p>
+                <Link className="flex-item-val" to={`/song/${song.song_id}`}>
                   <Button color="primary">Play</Button>
                 </Link>
               </li>
@@ -50,12 +47,9 @@ const Library = () => {
       <h1 className="library-title">Music Library</h1>
       <Container maxWidth="lg" className="titles-bolder">
         <li className="song-item">
-          <p className="flex-item-size">Name</p>
+          <p className="flex-item-size">Song ID</p>
           <p className="flex-item-size">Genre</p>
           <p className="flex-item-size">Time Length</p>
-          <p className="flex-item-size"># of Bars</p>
-          <p className="flex-item-size">Likes</p> 
-          <p className="flex-item-size">Song ID</p>
           <p className="button-title">Play Song</p>
         </li>
       </Container>

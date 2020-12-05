@@ -65,10 +65,10 @@ const Song = () => {
     return (
       <div className="single-song">
         <div className="song-title">
-          {song.title}
+          Song ID: {song.song_id}
         </div>
         <div className="song-genres">
-          {song.genres}
+          Genre: {song.genres}
         </div>
       </div>
     )
@@ -86,7 +86,7 @@ const Song = () => {
             </Button>
           </a>
         </div>
-        <LinearProgress color="primary" variant="determinate" value={barProgress}/>
+        <LinearProgress color="primary" variant="determinate" value={progress/duration}/>
         <div className="progress-row">
           <div className="play-pause">
             <Button variant="outlined" color="primary" onClick={() => playSong()}>

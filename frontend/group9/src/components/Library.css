@@ -25,10 +25,12 @@
 }
 
 .flex-item-size {
-  flex: 1 1;
-  align-items: center;
-  justify-content: center;
-  display: flex;
+  /* flex: 1 1; */
+  margin-right: 80px;
+}
+
+.flex-item-val {
+  margin-right: 100px;
 }
 
 .button-title {
