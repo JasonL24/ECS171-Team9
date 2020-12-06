@@ -1,0 +1,24 @@
+.about-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.about-intro {
+    margin: 30px;
+    font-size: 40px;
+}
+
+.about-body-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 30px;
+}
+
+.about-body {
+    margin-right: 30px;
+    margin-bottom: 70px;
+    font-size: 25px;
+}
+.about-yt-video {
+    align-self: center;
+}
