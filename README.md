@@ -15,8 +15,6 @@ and give ratings based on the music generated.
 4. Do not upload any MIDI / Data files to GitHub. All parsed data should go to Google Drive.
 4. It's ok to have a lot of commits
 
-*will update as we go*
-
 ## How to Run Locally
 ### Necessary installations
 * Node.js and npm (https://nodejs.org/en/)
@@ -32,19 +30,19 @@ Clone the repo into your local machine
 * Run `npm install` to install the dependencies (this may take a minute or two).
 * Run `npm start`. It should open *http://localhost:3000/* in your browser.
 
-The frontend is set up!!! :)
+The frontend is set up now!
 
 #### Step 2 - Backend Setup
 * Change into the `\ECS171Group9\backend` directory.
 * Create Virtual Environment with `python -m venv env`.
-* Activate the Virtual Environment - you should see (venv) appear before your pwd in your terminal/command prompt.
+* Activate the Virtual Environment - you should see (env) appear before your pwd in your terminal/command prompt after completing this step.
    * For Mac: Run `source env/bin/activate`
    * For PC: Run `env\Scripts\activate`
-* Run `pip install -r requirements.txt` to install dependencies.
+* Run `pip install -r requirements.txt` to install dependencies (this may take a couple minutes). 
 * Run `python run.py` to start the server.
 * Visit *http://localhost:5000/api/test* in your browser to make sure you can see the test message.
 
-The backend is set up!!! :)
+The backend is set up now!
 
 ### Running the App in General
 To shut down the frontend or backend server type *ctrl* + *C* in the command prompt (*command* + *C* in terminal for Mac).
