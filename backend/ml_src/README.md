@@ -11,12 +11,24 @@ If you DO NOT have a dedicated graphics card (GPU), use the first option. If you
 use command two. 
 -  `pip install tensorflow` Alternatively, if you are using Annaconda  `conda install tensorflow`
 -  `pip install tensorflow-gpu` or `conda install tensorflow-gpu`
+-  `pip install numpy pandas scikit-learn`
 
-Then you need the tensorflow addons package
-- `pip install tensorflow-addons` This one has no Annaconda equivalent.
+## File Documentations
+All the important files are written in python. There is one source folder (models) and two machine learning files.
 
-## Troubleshooting
-Some common errors and their solutions.
+- *keras_train.py* 
 
-1. Fails to import tensorflow_addons
-- Go to this Stackoverflow https://stackoverflow.com/questions/62696815/tensorflow-core-api-v2-random-has-no-attribute-generator
+This the main file for training the model. It calls the on the fit function repetitively until the user pauses it with
+ctrl + c. Check the keras_train.py for the whole command line argument cheatsheet. Here is an example command.
+
+`python keras_train.py model=load_model@./trained_models/duration save_model_to=./trained_models/duration data=generate@1 epoch=30 `
+
+
+- *generate_song.py*
+This is the main inference model where is reads the saved model and create the song. Here is an example command.
+
+`python generate_song.py`
+
+- *modle
+
+
