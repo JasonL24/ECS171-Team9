@@ -18,7 +18,7 @@ and give ratings based on the music generated.
 ## How to Run Locally
 ### Necessary installations
 * Node.js and npm (https://nodejs.org/en/)
-* Python 3.X.X (https://www.python.org/downloads/)
+* Python 3.5 - 3.8 (https://www.python.org/downloads/)  NOTE: Python 3.9 causes Tensorflow error
 * venv (run `pip install virtualenv` in terminal/command prompt)
 
 #### Step 1 - Clone Repo
