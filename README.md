@@ -15,6 +15,7 @@ Clone the repo into your local machine
 `git clone https://github.com/JasonL24/ECS171-Team9.git` or SSH clone if you have an SSH key setup.
 
 #### Step 2 - Backend Setup
+* We sent an email about the Firebase credentials. The `ecs171group9-a231f0136e76.json` file we sent must be placed in the `/backend/ml_src` directory.
 * Change into the `\ECS171Group9\backend` directory.
 * Create Virtual Environment with `python -m venv env`.
 * Activate the Virtual Environment - you should see (env) appear before your pwd in your terminal/command prompt after completing this step.
