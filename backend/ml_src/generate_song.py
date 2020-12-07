@@ -9,10 +9,14 @@ import subprocess
 delta = 0.07
 models = MusicNN()
 
+# Try different trained models for different songs
 models.load_weights('./ml_src/trained_models/big_set')
+# models.load_weights('./ml_src/trained_models/duration')
+
 txt_dir = './ml_src/txt_song/'
 newMidi_dir = './ml_src/midi_song/'
 song_id = str(uuid.uuid1())[0:6]
+
 
 def generate_song():
     song_length = 100
