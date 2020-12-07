@@ -25,13 +25,6 @@ and give ratings based on the music generated.
 Clone the repo into your local machine
 `git clone https://github.com/JasonL24/ECS171-Team9.git` or SSH clone if you have an SSH key setup.
 
-#### Step 2 - Frontend Setup
-* Change into the `ECS171Group9\frontend\group9` directory.
-* Run `npm install` to install the dependencies (this may take a minute or two).
-* Run `npm start`. It should open *http://localhost:3000/* in your browser.
-
-The frontend is set up now!
-
 #### Step 2 - Backend Setup
 * Change into the `\ECS171Group9\backend` directory.
 * Create Virtual Environment with `python -m venv env`.
@@ -43,6 +36,14 @@ The frontend is set up now!
 * Visit *http://localhost:5000/api/test* in your browser to make sure you can see the test message.
 
 The backend is set up now!
+
+#### Step 3 - Frontend Setup
+* Open up a new separate terminal
+* Change into the `ECS171Group9\frontend\group9` directory.
+* Run `npm install` to install the dependencies (this may take a minute or two).
+* Run `npm start`. It should open *http://localhost:3000/* in your browser.
+
+The frontend is set up now!
 
 ### Running the App in General
 To shut down the frontend or backend server type *ctrl* + *C* in the command prompt (*command* + *C* in terminal for Mac).
