@@ -29,6 +29,7 @@ Clone the repo into your local machine
 The backend is set up now!
 
 #### Step 3 - Frontend Setup
+* In the Firebase email we also sent `firebase.js`. That file should be placed in `/frontend/group9/src`.
 * Open up a new separate terminal
 * Change into the `ECS171Group9\frontend\group9` directory.
 * Run `npm install` to install the dependencies (this may take a minute or two).
